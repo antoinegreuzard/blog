@@ -2,38 +2,44 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
-use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Post as PostOperation;
 use ApiPlatform\Metadata\Put;
 use ApiPlatform\Metadata\Delete;
 use App\Repository\CategoryRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ApiResource(
   description: "Resource for managing categories",
   operations: [
-    new Get(),
-    new GetCollection(),
-    new Post(),
-    new Put(),
+    new Get(normalizationContext: ['groups' => 'category:item']),
+    new GetCollection(normalizationContext: ['groups' => 'category:list']),
+    new PostOperation(denormalizationContext: ['groups' => 'category:write']),
+    new Put(denormalizationContext: ['groups' => 'category:write']),
     new Delete()
   ],
-  normalizationContext: ['groups' => ['category:read']],
-  denormalizationContext: ['groups' => ['category:write']]
+  order: ["name" => "ASC"],
+  paginationEnabled: false
 )]
+#[ApiFilter(SearchFilter::class, properties: ['name' => 'partial'])]
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
 class Category
 {
   #[ORM\Id]
   #[ORM\GeneratedValue]
   #[ORM\Column]
+  #[Groups(['category:list', 'category:item'])]
   private ?int $id = null;
 
   #[ORM\Column(length: 255)]
+  #[Groups(['category:list', 'category:item', 'category:write'])]
   private ?string $name = null;
 
   #[ORM\OneToMany(targetEntity: Post::class, mappedBy: 'category')]
@@ -90,4 +96,4 @@ class Category
 
     return $this;
   }
-}
+}  
