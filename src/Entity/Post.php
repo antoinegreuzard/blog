@@ -30,6 +30,7 @@ use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 )]
 #[ApiFilter(SearchFilter::class, properties: ['title' => 'partial', 'category.name' => 'exact'])]
 #[ORM\Entity(repositoryClass: PostRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Post
 {
   #[ORM\Id]
@@ -68,6 +69,24 @@ class Post
   #[Groups(['post:list', 'post:item', 'post:write'])]
   private ?User $author = null;
 
+  public function __construct()
+  {
+    $this->createdAt = new DateTimeImmutable();
+    $this->updatedAt = new DateTimeImmutable();
+  }
+
+  #[ORM\PrePersist]
+  public function setCreatedAtValue(): void
+  {
+    $this->createdAt = new DateTimeImmutable();
+  }
+
+  #[ORM\PreUpdate]
+  public function setUpdatedAtValue(): void
+  {
+    $this->updatedAt = new DateTimeImmutable();
+  }
+
   public function getId(): ?int
   {
     return $this->id;
@@ -100,13 +119,6 @@ class Post
   public function getCreatedAt(): ?DateTimeImmutable
   {
     return $this->createdAt;
-  }
-
-  public function setCreatedAt(DateTimeImmutable $createdAt): static
-  {
-    $this->createdAt = $createdAt;
-
-    return $this;
   }
 
   public function getUpdatedAt(): ?DateTimeImmutable
