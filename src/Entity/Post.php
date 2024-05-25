@@ -3,12 +3,28 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post as PostAPI;
+use ApiPlatform\Metadata\Put;
+use ApiPlatform\Metadata\Delete;
 use App\Repository\PostRepository;
 use DateTimeImmutable;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ApiResource]
+#[ApiResource(
+  description: "Resource for managing posts",
+  operations: [
+    new Get(),
+    new GetCollection(),
+    new PostAPI(),
+    new Put(),
+    new Delete()
+  ],
+  normalizationContext: ['groups' => ['post:read']],
+  denormalizationContext: ['groups' => ['post:write']]
+)]
 #[ORM\Entity(repositoryClass: PostRepository::class)]
 class Post
 {
