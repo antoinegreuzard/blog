@@ -1,4 +1,4 @@
-name: Run PHPUnit Tests (Symfoy)
+name: Run PHPUnit Tests (Symfony)
 
 on: [push, pull_request]
 
