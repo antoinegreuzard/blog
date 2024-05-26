@@ -21,7 +21,6 @@ class RegistrationController extends AbstractController
     $form->handleRequest($request);
 
     if ($form->isSubmitted() && $form->isValid()) {
-      // Encode the plain password
       $user->setPassword(
         $userPasswordHasher->hashPassword(
           $user,
@@ -32,7 +31,15 @@ class RegistrationController extends AbstractController
       $entityManager->persist($user);
       $entityManager->flush();
 
-      return $this->redirectToRoute('home'); // Assurez-vous que cette route existe
+      return $this->redirectToRoute('home');
+    }
+
+    // Ajout de cette partie pour afficher les erreurs de validation dans les logs
+    if ($form->isSubmitted() && !$form->isValid()) {
+      foreach ($form->getErrors(true) as $error) {
+        // Affichage des erreurs de validation dans les logs
+        $this->addFlash('error', $error->getMessage());
+      }
     }
 
     return $this->render('registration/register.html.twig', [
@@ -40,4 +47,4 @@ class RegistrationController extends AbstractController
     ]);
   }
 }
-  
+      
