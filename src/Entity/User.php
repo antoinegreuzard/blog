@@ -44,6 +44,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
   private ?string $email = null;
 
   #[ORM\Column]
+  #[Groups(['user:read', 'user:write'])]
   private array $roles = [];
 
   /**
@@ -59,6 +60,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
   private ?string $username = null;
 
   #[ORM\OneToMany(targetEntity: Post::class, mappedBy: 'author', orphanRemoval: true)]
+  #[Groups(['user:read'])]
   private Collection $posts;
 
   public function __construct()
