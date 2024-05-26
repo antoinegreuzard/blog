@@ -20,24 +20,53 @@ class RegistrationController extends AbstractController
     $form = $this->createForm(RegistrationFormType::class, $user);
     $form->handleRequest($request);
 
-    if ($form->isSubmitted() && $form->isValid()) {
-      $user->setUsername($user->getEmail());
+    if ($form->isSubmitted()) {
+      $email = $form->get('email')->getData();
+      $username = $form->get('username')->getData();
+      $plainPassword = $form->get('plainPassword')->getData();
+      $agreeTerms = $form->get('agreeTerms')->getData();
 
-      $user->setPassword(
-        $userPasswordHasher->hashPassword(
-          $user,
-          $form->get('plainPassword')->getData()
-        )
-      );
+      $errors = [];
 
-      $entityManager->persist($user);
-      $entityManager->flush();
+      if (!$email) {
+        $errors[] = 'Email should not be blank.';
+      }
 
-      return $this->redirectToRoute('app_login');
+      if (!$username) {
+        $errors[] = 'Username should not be blank.';
+      }
+
+      if (!$plainPassword) {
+        $errors[] = 'Password should not be blank.';
+      } elseif (strlen($plainPassword) < 6) {
+        $errors[] = 'Password should be at least 6 characters.';
+      }
+
+      if (!$agreeTerms) {
+        $errors[] = 'You should agree to our terms.';
+      }
+
+      if (empty($errors)) {
+        $user->setPassword(
+          $userPasswordHasher->hashPassword(
+            $user,
+            $plainPassword
+          )
+        );
+
+        $entityManager->persist($user);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('home');
+      } else {
+        foreach ($errors as $error) {
+          $this->addFlash('error', $error);
+        }
+      }
     }
 
     return $this->render('registration/register.html.twig', [
       'registrationForm' => $form->createView(),
     ]);
   }
-}  
+}    

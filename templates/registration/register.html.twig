@@ -5,15 +5,17 @@
 {% block body %}
     <h1>Register</h1>
 
-    {{ form_errors(registrationForm) }}
+    {% for flash_error in app.flashes('error') %}
+        <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+    {% endfor %}
 
-    {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.email) }}
-        {{ form_row(registrationForm.plainPassword, {
-            label: 'Password'
-        }) }}
-        {{ form_row(registrationForm.agreeTerms) }}
+    {{ form_start(registrationForm, {'method': 'POST'}) }}
+        {{ form_errors(registrationForm) }}
+        {{ form_row(registrationForm.email, { 'attr': {'class': 'form-control'} }) }}
+        {{ form_row(registrationForm.username, { 'attr': {'class': 'form-control'} }) }}
+        {{ form_row(registrationForm.plainPassword, { 'label': 'Password', 'attr': {'class': 'form-control'} }) }}
+        {{ form_row(registrationForm.agreeTerms, { 'attr': {'class': 'form-check-input'} }) }}
 
-        <button type="submit" class="btn">Register</button>
+        <button type="submit" class="btn btn-success">Register</button>
     {{ form_end(registrationForm) }}
 {% endblock %}
