@@ -24,7 +24,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
@@ -40,7 +40,7 @@ jobs:
           echo "::set-output name=dir::$(composer config cache-files-dir)"
 
       - name: Cache Composer dependencies
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
@@ -51,7 +51,7 @@ jobs:
 
       - name: Create .env.test.local
         run: |
-          echo "DATABASE_URL=mysql://${{ secrets.MYSQL_USER }:${{ secrets.MYSQL_PASSWORD }@127.0.0.1:3306/${{ secrets.MYSQL_DATABASE }}?charset=utf8mb4" > .env.test.local
+          echo "DATABASE_URL=mysql://${{ secrets.MYSQL_USER }}:${{ secrets.MYSQL_PASSWORD }}@127.0.0.1:3306/${{ secrets.MYSQL_DATABASE }}?charset=utf8mb4" > .env.test.local
 
       - name: Create database schema
         run: php bin/console doctrine:schema:create --env=test
