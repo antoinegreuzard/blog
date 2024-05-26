@@ -12,10 +12,13 @@ jobs:
         env:
           MYSQL_ROOT_PASSWORD: root
           MYSQL_DATABASE: blog
-          MYSQL_USER: root
-          MYSQL_PASSWORD: root
         ports:
           - 3306:3306
+        options: >
+          --health-cmd="mysqladmin ping --silent"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
 
     steps:
       - name: Checkout code
@@ -47,9 +50,17 @@ jobs:
       - name: Wait for MySQL to be ready
         run: |
           echo "Waiting for MySQL to be ready..."
-          while ! mysqladmin ping -h "127.0.0.1" --silent; do
+          for i in {30..0}; do
+            if mysqladmin ping -h "127.0.0.1" --silent; then
+              break
+            fi
+            echo 'MySQL still not ready, sleeping for 1 second...'
             sleep 1
           done
+          if [ "$i" = 0 ]; then
+            echo 'MySQL not ready in time, failing.'
+            exit 1
+          fi
           echo "MySQL is ready."
 
       - name: Create .env.test.local
