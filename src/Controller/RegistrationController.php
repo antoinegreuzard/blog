@@ -20,9 +20,6 @@ class RegistrationController extends AbstractController
     $form = $this->createForm(RegistrationFormType::class, $user);
     $form->handleRequest($request);
 
-
-    // d($form->get('plainPassword') && $form->get('username') && $form->get('email') && $form->get('agreeTerms'));
-
     if ($form->isSubmitted() && $form->get('plainPassword') && $form->get('username') && $form->get('email') && $form->get('agreeTerms')) {
       $user->setPassword(
         $userPasswordHasher->hashPassword(
