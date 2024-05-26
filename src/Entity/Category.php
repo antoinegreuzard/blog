@@ -195,7 +195,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
   ],
   normalizationContext: ['groups' => ['category:read']],
   denormalizationContext: ['groups' => ['category:write']],
-  paginationEnabled: false,
   openapiContext: [
     'components' => [
       'schemas' => [
@@ -234,7 +233,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
         ],
       ],
     ],
-  ]
+  ],
+  paginationEnabled: false
 )]
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
 class Category

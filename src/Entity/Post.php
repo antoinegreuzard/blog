@@ -259,7 +259,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
   ],
   normalizationContext: ['groups' => ['post:read']],
   denormalizationContext: ['groups' => ['post:write']],
-  paginationEnabled: false,
   openapiContext: [
     'components' => [
       'schemas' => [
@@ -302,7 +301,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
         ],
       ],
     ],
-  ]
+  ],
+  paginationEnabled: false
 )]
 #[ORM\Entity(repositoryClass: PostRepository::class)]
 #[ORM\HasLifecycleCallbacks]

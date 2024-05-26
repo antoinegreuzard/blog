@@ -21,8 +21,10 @@ class RegistrationController extends AbstractController
     $form->handleRequest($request);
 
     if ($form->isSubmitted() && $form->isValid()) {
-      $user->setUsername($user->getEmail());
+      // Set username as email if needed
+      // $user->setUsername($user->getEmail());
 
+      // Encode the plain password
       $user->setPassword(
         $userPasswordHasher->hashPassword(
           $user,
@@ -33,11 +35,11 @@ class RegistrationController extends AbstractController
       $entityManager->persist($user);
       $entityManager->flush();
 
-      return $this->redirectToRoute('app_login');
+      return $this->redirectToRoute('home');
     }
 
     return $this->render('registration/register.html.twig', [
       'registrationForm' => $form->createView(),
     ]);
   }
-}  
+}
