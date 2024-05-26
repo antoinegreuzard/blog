@@ -20,7 +20,10 @@ class RegistrationController extends AbstractController
     $form = $this->createForm(RegistrationFormType::class, $user);
     $form->handleRequest($request);
 
-    if ($form->isSubmitted() && $form->isValid()) {
+
+    // d($form->get('plainPassword') && $form->get('username') && $form->get('email') && $form->get('agreeTerms'));
+
+    if ($form->isSubmitted() && $form->get('plainPassword') && $form->get('username') && $form->get('email') && $form->get('agreeTerms')) {
       $user->setPassword(
         $userPasswordHasher->hashPassword(
           $user,
@@ -28,16 +31,13 @@ class RegistrationController extends AbstractController
         )
       );
 
+
       $entityManager->persist($user);
       $entityManager->flush();
 
       return $this->redirectToRoute('home');
-    }
-
-    // Ajout de cette partie pour afficher les erreurs de validation dans les logs
-    if ($form->isSubmitted() && !$form->isValid()) {
+    } else {
       foreach ($form->getErrors(true) as $error) {
-        // Affichage des erreurs de validation dans les logs
         $this->addFlash('error', $error->getMessage());
       }
     }
@@ -47,4 +47,3 @@ class RegistrationController extends AbstractController
     ]);
   }
 }
-      
