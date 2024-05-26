@@ -17,16 +17,21 @@ class RegistrationFormTypeTest extends TypeTestCase
       'agreeTerms' => true,
     ];
 
-    $user = new User();
-    $form = $this->factory->create(RegistrationFormType::class, $user);
+    $model = new User();
+    $form = $this->factory->create(RegistrationFormType::class, $model);
 
     $expected = new User();
     $expected->setEmail('test@example.com');
     $expected->setUsername('testuser');
 
+    // Soumettre les données du formulaire
     $form->submit($formData);
+
+    // Vérifiez que le formulaire est synchronisé
     $this->assertTrue($form->isSynchronized());
-    $this->assertEquals($expected->getEmail(), $user->getEmail());
-    $this->assertEquals($expected->getUsername(), $user->getUsername());
+
+    // Vérifiez que les données attendues correspondent aux données réelles
+    $this->assertEquals($expected->getEmail(), $model->getEmail());
+    $this->assertEquals($expected->getUsername(), $model->getUsername());
   }
 }

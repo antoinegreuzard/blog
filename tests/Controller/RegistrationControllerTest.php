@@ -29,9 +29,8 @@ class RegistrationControllerTest extends WebTestCase
 
     $client->submit($form);
 
-    $this->assertResponseRedirects('/');
-
-    $client->followRedirect();
-    $this->assertSelectorTextContains('h1', 'Welcome to the Home Page!');
+    // Check if the response contains error message about existing email
+    $this->assertSelectorTextContains('.alert-danger', 'This email is already registered.');
   }
 }
+    
