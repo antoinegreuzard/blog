@@ -43,6 +43,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
           ],
         ],
       ],
+      security: "is_granted('ROLE_USER') and object == user",
     ),
     new GetCollection(
       uriTemplate: '/users',
@@ -68,6 +69,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
           ],
         ],
       ],
+      security: "is_granted('ROLE_USER')",
     ),
     new ApiPost(
       uriTemplate: '/users',
@@ -135,6 +137,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
           ],
         ],
       ],
+      security: "is_granted('ROLE_USER') and object == user",
     ),
     new Delete(
       uriTemplate: '/users/{id}',
@@ -147,6 +150,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
           ],
         ],
       ],
+      security: "is_granted('ROLE_USER')",
     ),
     new Patch(
       uriTemplate: '/users/{id}',
@@ -179,6 +183,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
           ],
         ],
       ],
+      security: "is_granted('ROLE_USER') and object == user",
     ),
   ],
   normalizationContext: ['groups' => ['user:read']],

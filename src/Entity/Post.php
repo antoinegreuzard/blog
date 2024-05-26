@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Post as ApiPost;
 use ApiPlatform\Metadata\Put;
@@ -50,6 +49,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
           ],
         ],
       ],
+      security: "is_granted('ROLE_USER')",
     ),
     new GetCollection(
       uriTemplate: '/posts',
@@ -84,6 +84,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
           ],
         ],
       ],
+      security: "is_granted('ROLE_USER')",
     ),
     new ApiPost(
       uriTemplate: '/posts',
@@ -129,6 +130,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
           ],
         ],
       ],
+      security: "is_granted('ROLE_USER')",
     ),
     new Put(
       uriTemplate: '/posts/{id}',
@@ -174,6 +176,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
           ],
         ],
       ],
+      security: "is_granted('ROLE_USER')",
     ),
     new Delete(
       uriTemplate: '/posts/{id}',
@@ -186,6 +189,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
           ],
         ],
       ],
+      security: "is_granted('ROLE_USER')",
     ),
     new Patch(
       uriTemplate: '/posts/{id}',
@@ -228,6 +232,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
           ],
         ],
       ],
+      security: "is_granted('ROLE_USER')",
     ),
   ],
   normalizationContext: ['groups' => ['post:read']],
@@ -390,4 +395,4 @@ class Post
   {
     $this->updatedAt = new DateTimeImmutable();
   }
-}      
+}
