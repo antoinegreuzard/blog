@@ -3,11 +3,13 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\Get;
-use ApiPlatform\Metadata\GetCollection;
-use ApiPlatform\Metadata\Post as PostOperation;
+use ApiPlatform\Metadata\Post as ApiPost;
 use ApiPlatform\Metadata\Put;
 use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Patch;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -15,19 +17,241 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ApiResource(
-  description: "Resource for managing users",
   operations: [
-    new Get(normalizationContext: ['groups' => 'user:item']),
-    new GetCollection(normalizationContext: ['groups' => 'user:list']),
-    new PostOperation(denormalizationContext: ['groups' => 'user:write']),
-    new Put(denormalizationContext: ['groups' => 'user:write']),
-    new Delete()
+    new Get(
+      uriTemplate: '/users/{id}',
+      openapiContext: [
+        'summary' => 'Get a user',
+        'description' => 'Retrieve a user by their ID.',
+        'responses' => [
+          '200' => [
+            'description' => 'User resource',
+            'content' => [
+              'application/json' => [
+                'schema' => [
+                  '$ref' => '#/components/schemas/User',
+                ],
+                'example' => [
+                  'id' => 1,
+                  'email' => 'johndoe@example.com',
+                  'roles' => ['ROLE_USER'],
+                  'username' => 'johndoe',
+                  'posts' => [],
+                ],
+              ],
+            ],
+          ],
+        ],
+      ],
+    ),
+    new GetCollection(
+      uriTemplate: '/users',
+      openapiContext: [
+        'summary' => 'Get the collection of users',
+        'description' => 'Retrieve a list of users.',
+        'responses' => [
+          '200' => [
+            'description' => 'Users collection',
+            'content' => [
+              'application/json' => [
+                'schema' => [
+                  'type' => 'array',
+                  'items' => [
+                    '$ref' => '#/components/schemas/User',
+                  ],
+                ],
+                'example' => [
+                  [
+                    'id' => 1,
+                    'email' => 'johndoe@example.com',
+                    'roles' => ['ROLE_USER'],
+                    'username' => 'johndoe',
+                    'posts' => [],
+                  ],
+                ],
+              ],
+            ],
+          ],
+        ],
+      ],
+    ),
+    new ApiPost(
+      uriTemplate: '/users',
+      openapiContext: [
+        'summary' => 'Create a new user',
+        'description' => 'Create a new user with the provided details.',
+        'requestBody' => [
+          'content' => [
+            'application/json' => [
+              'schema' => [
+                '$ref' => '#/components/schemas/User',
+              ],
+              'example' => [
+                'email' => 'janedoe@example.com',
+                'password' => 'password123',
+                'username' => 'janedoe',
+              ],
+            ],
+          ],
+        ],
+        'responses' => [
+          '201' => [
+            'description' => 'User created',
+            'content' => [
+              'application/json' => [
+                'schema' => [
+                  '$ref' => '#/components/schemas/User',
+                ],
+                'example' => [
+                  'id' => 2,
+                  'email' => 'janedoe@example.com',
+                  'roles' => ['ROLE_USER'],
+                  'username' => 'janedoe',
+                  'posts' => [],
+                ],
+              ],
+            ],
+          ],
+        ],
+      ],
+    ),
+    new Put(
+      uriTemplate: '/users/{id}',
+      openapiContext: [
+        'summary' => 'Update a user',
+        'description' => 'Update the details of an existing user.',
+        'requestBody' => [
+          'content' => [
+            'application/json' => [
+              'schema' => [
+                '$ref' => '#/components/schemas/User',
+              ],
+              'example' => [
+                'email' => 'johndoe_updated@example.com',
+                'username' => 'johndoe_updated',
+              ],
+            ],
+          ],
+        ],
+        'responses' => [
+          '200' => [
+            'description' => 'User updated',
+            'content' => [
+              'application/json' => [
+                'schema' => [
+                  '$ref' => '#/components/schemas/User',
+                ],
+                'example' => [
+                  'id' => 1,
+                  'email' => 'johndoe_updated@example.com',
+                  'roles' => ['ROLE_USER'],
+                  'username' => 'johndoe_updated',
+                  'posts' => [],
+                ],
+              ],
+            ],
+          ],
+        ],
+      ],
+    ),
+    new Delete(
+      uriTemplate: '/users/{id}',
+      openapiContext: [
+        'summary' => 'Delete a user',
+        'description' => 'Delete a user by their ID.',
+        'responses' => [
+          '204' => [
+            'description' => 'User deleted',
+          ],
+        ],
+      ],
+    ),
+    new Patch(
+      uriTemplate: '/users/{id}',
+      openapiContext: [
+        'summary' => 'Partially update a user',
+        'description' => 'Update some details of an existing user.',
+        'requestBody' => [
+          'content' => [
+            'application/json' => [
+              'schema' => [
+                '$ref' => '#/components/schemas/User',
+              ],
+              'example' => [
+                'username' => 'johndoe_partial',
+              ],
+            ],
+          ],
+        ],
+        'responses' => [
+          '200' => [
+            'description' => 'User partially updated',
+            'content' => [
+              'application/json' => [
+                'schema' => [
+                  '$ref' => '#/components/schemas/User',
+                ],
+                'example' => [
+                  'id' => 1,
+                  'email' => 'johndoe@example.com',
+                  'roles' => ['ROLE_USER'],
+                  'username' => 'johndoe_partial',
+                  'posts' => [],
+                ],
+              ],
+            ],
+          ],
+        ],
+      ],
+    ),
   ],
-  paginationEnabled: true
+  normalizationContext: ['groups' => ['user:read']],
+  denormalizationContext: ['groups' => ['user:write']],
+  paginationEnabled: false,
+  openapiContext: [
+    'components' => [
+      'schemas' => [
+        'User' => [
+          'type' => 'object',
+          'properties' => [
+            'id' => [
+              'type' => 'integer',
+              'example' => 1,
+            ],
+            'email' => [
+              'type' => 'string',
+              'example' => 'johndoe@example.com',
+            ],
+            'roles' => [
+              'type' => 'array',
+              'items' => [
+                'type' => 'string',
+                'example' => 'ROLE_USER',
+              ],
+            ],
+            'password' => [
+              'type' => 'string',
+              'example' => 'password123',
+            ],
+            'username' => [
+              'type' => 'string',
+              'example' => 'johndoe',
+            ],
+            'posts' => [
+              'type' => 'array',
+              'items' => [
+                '$ref' => '#/components/schemas/Post',
+              ],
+            ],
+          ],
+        ],
+      ],
+    ],
+  ]
 )]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
@@ -36,11 +260,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
   #[ORM\Id]
   #[ORM\GeneratedValue]
   #[ORM\Column]
-  #[Groups(['user:list', 'user:item'])]
+  #[Groups(['user:read'])]
   private ?int $id = null;
 
   #[ORM\Column(length: 180, unique: true)]
-  #[Groups(['user:list', 'user:item', 'user:write'])]
+  #[Assert\NotBlank]
+  #[Assert\Email]
+  #[Groups(['user:read', 'user:write'])]
   private ?string $email = null;
 
   #[ORM\Column]
@@ -51,12 +277,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
    * @var string|null The hashed password
    */
   #[ORM\Column]
-  #[Assert\NotBlank(message: "Password is required")]
+  #[Assert\NotBlank]
   #[Groups(['user:write'])]
   private ?string $password = null;
 
   #[ORM\Column(length: 255)]
-  #[Groups(['user:list', 'user:item', 'user:write'])]
+  #[Assert\NotBlank]
+  #[Groups(['user:read', 'user:write'])]
   private ?string $username = null;
 
   #[ORM\OneToMany(targetEntity: Post::class, mappedBy: 'author', orphanRemoval: true)]
@@ -179,4 +406,4 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     return $this;
   }
-}    
+}      
