@@ -10,8 +10,8 @@ jobs:
       mysql:
         image: mysql:5.7
         env:
-          MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: blog_symfony_test
+          MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+          MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
         ports:
           - 3306:3306
         options: --health-cmd="mysqladmin ping --silent" --health-interval=10s --health-timeout=5s --health-retries=3
@@ -45,7 +45,7 @@ jobs:
 
       - name: Create .env.test.local
         run: |
-          echo "DATABASE_URL=mysql://root:root@127.0.0.1:3306/blog_symfony_test" > .env.test.local
+          echo "DATABASE_URL=mysql://${{ secrets.MYSQL_USER }}:${{ secrets.MYSQL_PASSWORD }}@127.0.0.1:3306/${{ secrets.MYSQL_DATABASE }}?charset=utf8mb4" > .env.test.local
 
       - name: Create database schema
         run: php bin/console doctrine:schema:create --env=test
