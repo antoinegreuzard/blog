@@ -20,7 +20,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ApiResource(
   operations: [
     new Get(
-      security: "is_granted('ROLE_USER')",
       uriTemplate: '/categories/{id}',
       openapiContext: [
         'summary' => 'Get a category',
@@ -42,7 +41,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
       ],
     ),
     new GetCollection(
-      security: "is_granted('ROLE_USER')",
       uriTemplate: '/categories',
       openapiContext: [
         'summary' => 'Get the collection of categories',
@@ -66,7 +64,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
       ],
     ),
     new ApiPost(
-      security: "is_granted('ROLE_ADMIN')",
       uriTemplate: '/categories',
       openapiContext: [
         'summary' => 'Create a new category',
@@ -95,9 +92,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
           ],
         ],
       ],
+      security: "is_granted('ROLE_ADMIN')",
     ),
     new Put(
-      security: "is_granted('ROLE_ADMIN')",
       uriTemplate: '/categories/{id}',
       openapiContext: [
         'summary' => 'Update a category',
@@ -126,9 +123,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
           ],
         ],
       ],
+      security: "is_granted('ROLE_ADMIN')",
     ),
     new Delete(
-      security: "is_granted('ROLE_ADMIN')",
       uriTemplate: '/categories/{id}',
       openapiContext: [
         'summary' => 'Delete a category',
@@ -139,9 +136,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
           ],
         ],
       ],
+      security: "is_granted('ROLE_ADMIN')",
     ),
     new Patch(
-      security: "is_granted('ROLE_ADMIN')",
       uriTemplate: '/categories/{id}',
       openapiContext: [
         'summary' => 'Partially update a category',
@@ -170,6 +167,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
           ],
         ],
       ],
+      security: "is_granted('ROLE_ADMIN')",
     ),
   ],
   normalizationContext: ['groups' => ['category:read']],

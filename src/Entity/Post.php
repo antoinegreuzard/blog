@@ -49,7 +49,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
           ],
         ],
       ],
-      security: "is_granted('ROLE_USER')",
     ),
     new GetCollection(
       uriTemplate: '/posts',
@@ -84,7 +83,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
           ],
         ],
       ],
-      security: "is_granted('ROLE_USER')",
     ),
     new ApiPost(
       uriTemplate: '/posts',
