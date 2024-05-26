@@ -29,9 +29,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
             'description' => 'Category resource',
             'content' => [
               'application/json' => [
-                'schema' => [
-                  '$ref' => '#/components/schemas/Category',
-                ],
                 'example' => [
                   'id' => 1,
                   'name' => 'Technology',
@@ -53,12 +50,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
             'description' => 'Categories collection',
             'content' => [
               'application/json' => [
-                'schema' => [
-                  'type' => 'array',
-                  'items' => [
-                    '$ref' => '#/components/schemas/Category',
-                  ],
-                ],
                 'example' => [
                   [
                     'id' => 1,
@@ -80,9 +71,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
         'requestBody' => [
           'content' => [
             'application/json' => [
-              'schema' => [
-                '$ref' => '#/components/schemas/Category',
-              ],
               'example' => [
                 'name' => 'Health',
               ],
@@ -94,9 +82,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
             'description' => 'Category created',
             'content' => [
               'application/json' => [
-                'schema' => [
-                  '$ref' => '#/components/schemas/Category',
-                ],
                 'example' => [
                   'id' => 2,
                   'name' => 'Health',
@@ -116,9 +101,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
         'requestBody' => [
           'content' => [
             'application/json' => [
-              'schema' => [
-                '$ref' => '#/components/schemas/Category',
-              ],
               'example' => [
                 'name' => 'Science',
               ],
@@ -130,9 +112,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
             'description' => 'Category updated',
             'content' => [
               'application/json' => [
-                'schema' => [
-                  '$ref' => '#/components/schemas/Category',
-                ],
                 'example' => [
                   'id' => 1,
                   'name' => 'Science',
@@ -164,9 +143,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
         'requestBody' => [
           'content' => [
             'application/json' => [
-              'schema' => [
-                '$ref' => '#/components/schemas/Category',
-              ],
               'example' => [
                 'name' => 'Art',
               ],
@@ -178,9 +154,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
             'description' => 'Category partially updated',
             'content' => [
               'application/json' => [
-                'schema' => [
-                  '$ref' => '#/components/schemas/Category',
-                ],
                 'example' => [
                   'id' => 1,
                   'name' => 'Art',

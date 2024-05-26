@@ -29,9 +29,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
             'description' => 'Post resource',
             'content' => [
               'application/json' => [
-                'schema' => [
-                  '$ref' => '#/components/schemas/Post',
-                ],
                 'example' => [
                   'id' => 1,
                   'title' => 'My First Post',
@@ -64,12 +61,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
             'description' => 'Posts collection',
             'content' => [
               'application/json' => [
-                'schema' => [
-                  'type' => 'array',
-                  'items' => [
-                    '$ref' => '#/components/schemas/Post',
-                  ],
-                ],
                 'example' => [
                   [
                     'id' => 1,
@@ -102,9 +93,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
         'requestBody' => [
           'content' => [
             'application/json' => [
-              'schema' => [
-                '$ref' => '#/components/schemas/Post',
-              ],
               'example' => [
                 'title' => 'My New Post',
                 'content' => 'This is the content of my new post.',
@@ -120,9 +108,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
             'description' => 'Post created',
             'content' => [
               'application/json' => [
-                'schema' => [
-                  '$ref' => '#/components/schemas/Post',
-                ],
                 'example' => [
                   'id' => 2,
                   'title' => 'My New Post',
@@ -153,9 +138,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
         'requestBody' => [
           'content' => [
             'application/json' => [
-              'schema' => [
-                '$ref' => '#/components/schemas/Post',
-              ],
               'example' => [
                 'title' => 'Updated Post Title',
                 'content' => 'This is the updated content of the post.',
@@ -171,9 +153,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
             'description' => 'Post updated',
             'content' => [
               'application/json' => [
-                'schema' => [
-                  '$ref' => '#/components/schemas/Post',
-                ],
                 'example' => [
                   'id' => 1,
                   'title' => 'Updated Post Title',
@@ -216,9 +195,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
         'requestBody' => [
           'content' => [
             'application/json' => [
-              'schema' => [
-                '$ref' => '#/components/schemas/Post',
-              ],
               'example' => [
                 'title' => 'Partially Updated Post Title',
                 'content' => 'This is the partially updated content of the post.',
@@ -231,9 +207,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
             'description' => 'Post partially updated',
             'content' => [
               'application/json' => [
-                'schema' => [
-                  '$ref' => '#/components/schemas/Post',
-                ],
                 'example' => [
                   'id' => 1,
                   'title' => 'Partially Updated Post Title',
@@ -259,49 +232,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
   ],
   normalizationContext: ['groups' => ['post:read']],
   denormalizationContext: ['groups' => ['post:write']],
-  openapiContext: [
-    'components' => [
-      'schemas' => [
-        'Post' => [
-          'type' => 'object',
-          'properties' => [
-            'id' => [
-              'type' => 'integer',
-              'example' => 1,
-            ],
-            'title' => [
-              'type' => 'string',
-              'example' => 'My First Post',
-            ],
-            'content' => [
-              'type' => 'string',
-              'example' => 'This is the content of my first post.',
-            ],
-            'createdAt' => [
-              'type' => 'string',
-              'format' => 'date-time',
-              'example' => '2023-01-01T12:00:00+00:00',
-            ],
-            'updatedAt' => [
-              'type' => 'string',
-              'format' => 'date-time',
-              'example' => '2023-01-01T12:00:00+00:00',
-            ],
-            'slug' => [
-              'type' => 'string',
-              'example' => 'my-first-post',
-            ],
-            'category' => [
-              '$ref' => '#/components/schemas/Category',
-            ],
-            'author' => [
-              '$ref' => '#/components/schemas/User',
-            ],
-          ],
-        ],
-      ],
-    ],
-  ],
   paginationEnabled: false
 )]
 #[ORM\Entity(repositoryClass: PostRepository::class)]

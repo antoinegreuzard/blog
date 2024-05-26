@@ -31,9 +31,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
             'description' => 'User resource',
             'content' => [
               'application/json' => [
-                'schema' => [
-                  '$ref' => '#/components/schemas/User',
-                ],
                 'example' => [
                   'id' => 1,
                   'email' => 'johndoe@example.com',
@@ -57,12 +54,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
             'description' => 'Users collection',
             'content' => [
               'application/json' => [
-                'schema' => [
-                  'type' => 'array',
-                  'items' => [
-                    '$ref' => '#/components/schemas/User',
-                  ],
-                ],
                 'example' => [
                   [
                     'id' => 1,
@@ -86,9 +77,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
         'requestBody' => [
           'content' => [
             'application/json' => [
-              'schema' => [
-                '$ref' => '#/components/schemas/User',
-              ],
               'example' => [
                 'email' => 'janedoe@example.com',
                 'password' => 'password123',
@@ -102,9 +90,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
             'description' => 'User created',
             'content' => [
               'application/json' => [
-                'schema' => [
-                  '$ref' => '#/components/schemas/User',
-                ],
                 'example' => [
                   'id' => 2,
                   'email' => 'janedoe@example.com',
@@ -126,9 +111,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
         'requestBody' => [
           'content' => [
             'application/json' => [
-              'schema' => [
-                '$ref' => '#/components/schemas/User',
-              ],
               'example' => [
                 'email' => 'johndoe_updated@example.com',
                 'username' => 'johndoe_updated',
@@ -141,9 +123,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
             'description' => 'User updated',
             'content' => [
               'application/json' => [
-                'schema' => [
-                  '$ref' => '#/components/schemas/User',
-                ],
                 'example' => [
                   'id' => 1,
                   'email' => 'johndoe_updated@example.com',
@@ -177,9 +156,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
         'requestBody' => [
           'content' => [
             'application/json' => [
-              'schema' => [
-                '$ref' => '#/components/schemas/User',
-              ],
               'example' => [
                 'username' => 'johndoe_partial',
               ],
@@ -191,9 +167,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
             'description' => 'User partially updated',
             'content' => [
               'application/json' => [
-                'schema' => [
-                  '$ref' => '#/components/schemas/User',
-                ],
                 'example' => [
                   'id' => 1,
                   'email' => 'johndoe@example.com',
@@ -210,46 +183,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
   ],
   normalizationContext: ['groups' => ['user:read']],
   denormalizationContext: ['groups' => ['user:write']],
-  openapiContext: [
-    'components' => [
-      'schemas' => [
-        'User' => [
-          'type' => 'object',
-          'properties' => [
-            'id' => [
-              'type' => 'integer',
-              'example' => 1,
-            ],
-            'email' => [
-              'type' => 'string',
-              'example' => 'johndoe@example.com',
-            ],
-            'roles' => [
-              'type' => 'array',
-              'items' => [
-                'type' => 'string',
-                'example' => 'ROLE_USER',
-              ],
-            ],
-            'password' => [
-              'type' => 'string',
-              'example' => 'password123',
-            ],
-            'username' => [
-              'type' => 'string',
-              'example' => 'johndoe',
-            ],
-            'posts' => [
-              'type' => 'array',
-              'items' => [
-                '$ref' => '#/components/schemas/Post',
-              ],
-            ],
-          ],
-        ],
-      ],
-    ],
-  ],
   paginationEnabled: false
 )]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
