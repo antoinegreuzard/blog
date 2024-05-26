@@ -22,16 +22,17 @@ class RegistrationController extends AbstractController
 
     if ($form->isSubmitted() && $form->isValid()) {
       // Encode the plain password
-      $hashedPassword = $userPasswordHasher->hashPassword(
-        $user,
-        $form->get('plainPassword')->getData()
+      $user->setPassword(
+        $userPasswordHasher->hashPassword(
+          $user,
+          $form->get('plainPassword')->getData()
+        )
       );
-      $user->setPassword($hashedPassword);
 
       $entityManager->persist($user);
       $entityManager->flush();
 
-      return $this->redirectToRoute('home');
+      return $this->redirectToRoute('home'); // Assurez-vous que cette route existe
     }
 
     return $this->render('registration/register.html.twig', [
@@ -39,3 +40,4 @@ class RegistrationController extends AbstractController
     ]);
   }
 }
+  
