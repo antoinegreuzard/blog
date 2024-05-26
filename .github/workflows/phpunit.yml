@@ -10,14 +10,19 @@ jobs:
       mysql:
         image: mysql:5.7
         env:
-          MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: blog
+          MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+          MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
         ports:
           - 3306:3306
+        options: >
+          --health-cmd="mysqladmin ping --silent"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v2
 
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
@@ -33,34 +38,19 @@ jobs:
           echo "::set-output name=dir::$(composer config cache-files-dir)"
 
       - name: Cache Composer dependencies
-        uses: actions/cache@v3
+        uses: actions/cache@v2
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
           restore-keys: ${{ runner.os }}-composer-
 
-      - name: Create .env.test.local
-        run: |
-          echo "DATABASE_URL=mysql://root:root@127.0.0.1:3306/blog?charset=utf8mb4" > .env.test.local
-
       - name: Install Composer dependencies
         run: composer install --no-progress --no-suggest --prefer-dist --optimize-autoloader
 
-      - name: Wait for MySQL to be ready
+      - name: Create .env.local
         run: |
-          echo "Waiting for MySQL to be ready..."
-          for i in {30..0}; do
-            if mysqladmin ping -h "127.0.0.1" --silent; then
-              break
-            fi
-            echo 'MySQL still not ready, sleeping for 1 second...'
-            sleep 1
-          done
-          if [ "$i" = 0 ]; then
-            echo 'MySQL not ready in time, failing.'
-            exit 1
-          fi
-          echo "MySQL is ready."
+          echo "APP_ENV=test" > .env.local
+          echo "DATABASE_URL=mysql://root:${{ secrets.MYSQL_ROOT_PASSWORD }}@127.0.0.1:3306/${{ secrets.MYSQL_DATABASE }}?charset=utf8mb4" >> .env.local
 
       - name: Create database schema
         run: php bin/console doctrine:schema:create --env=test
