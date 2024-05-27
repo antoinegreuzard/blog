@@ -1,14 +1,35 @@
-name: Symfony Tests
+name: "Tests"
 
 on:
-  push:
-    branches: [main]
   pull_request:
-    branches: [main]
+  push:
+    branches:
+      - main
+
+env:
+  fail-fast: true
+  PHPUNIT_FLAGS: "-v"
+  SYMFONY_PHPUNIT_DIR: "$HOME/symfony-bridge/.phpunit"
+  SYMFONY_DEPRECATIONS_HELPER: 0
+
+permissions:
+  contents: read
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    name: "${{ matrix.operating-system }} / PHP ${{ matrix.php-version }}"
+    runs-on: ${{ matrix.operating-system }}
+    continue-on-error: false
+
+    strategy:
+      matrix:
+        operating-system: ['ubuntu-latest']
+        php-version: ['8.2', '8.3']
+        include:
+          - operating-system: 'macos-14'
+            php-version: '8.2'
+          - operating-system: 'windows-latest'
+            php-version: '8.2'
 
     services:
       mysql:
@@ -25,45 +46,61 @@ jobs:
           --health-retries 3
 
     steps:
-      - name: Checkout code
+      - name: "Checkout code"
         uses: actions/checkout@v4
 
-      - name: Set up PHP
+      - name: "Install PHP with extensions"
         uses: shivammathur/setup-php@v2
         with:
-          php-version: 8.2
-          extensions: mbstring, intl, pdo_mysql
-          ini-values: post_max_size=256M, upload_max_filesize=256M
-          coverage: none
+          coverage: "none"
+          extensions: "intl, mbstring, pdo_mysql, zip"
+          php-version: ${{ matrix.php-version }}
+          tools: composer:v2
 
-      - name: Get Composer Cache Directory
+      - name: "Add PHPUnit matcher"
+        run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
+
+      - name: "Set composer cache directory"
         id: composer-cache
-        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+        shell: bash
 
-      - name: Cache Composer Dependencies
-        uses: actions/cache@v3
+      - name: "Cache composer"
+        uses: actions/cache@v4
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('composer.lock') }}
           restore-keys: ${{ runner.os }}-composer-
 
-      - name: Install Composer Dependencies
-        run: composer install --prefer-dist --no-progress --no-suggest --no-interaction
+      - name: "Install dependencies"
+        run: composer install --ansi --no-interaction --no-progress
 
-      - name: Create .env.test.local
+      - name: "Create .env.test.local"
         run: |
           echo "APP_ENV=test" > .env.test.local
           echo "APP_DEBUG=1" >> .env.test.local
           echo "DATABASE_URL=mysql://root:root@127.0.0.1:3306/test" >> .env.test.local
 
-      - name: Prepare Database
+      - name: "Build and compile assets"
+        run: |
+          php bin/console importmap:install
+          php bin/console sass:build
+          php bin/console asset-map:compile
+
+      - name: "Prepare Database"
         env:
           DATABASE_URL: mysql://root:root@127.0.0.1:3306/test
         run: |
           php bin/console doctrine:database:create --env=test --if-not-exists
           php bin/console doctrine:schema:update --force --env=test
 
-      - name: Run Tests
+      - name: "Install PHPUnit"
+        run: vendor/bin/simple-phpunit install
+
+      - name: "PHPUnit version"
+        run: vendor/bin/simple-phpunit --version
+
+      - name: "Run tests"
         env:
           DATABASE_URL: mysql://root:root@127.0.0.1:3306/test
-        run: ./vendor/bin/simple-phpunit
+        run: vendor/bin/simple-phpunit ${{ env.PHPUNIT_FLAGS }}
