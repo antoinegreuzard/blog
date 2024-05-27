@@ -62,16 +62,11 @@ jobs:
           echo "DATABASE_URL=mysql://root:root@127.0.0.1:3306/test" >> .env.test.local
 
       - name: "Source environment variables"
-        shell: bash
-        run: |
-          set -a
-          source .env.test.local
-          set +a
+        run: source .env.test.local
 
       - name: "Set composer cache directory"
         id: composer-cache
         run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
-        shell: bash
 
       - name: "Cache composer"
         uses: actions/cache@v4
@@ -95,7 +90,7 @@ jobs:
           fi
 
       - name: "Install dependencies"
-        run: composer install --ansi --no-interaction --no-progress
+        run: composer install --prefer-dist --no-progress --no-suggest --no-interaction
 
       - name: "Build and compile assets"
         run: |
