@@ -72,6 +72,11 @@ jobs:
           key: ${{ runner.os }}-composer-${{ hashFiles('composer.lock') }}
           restore-keys: ${{ runner.os }}-composer-
 
+      - name: "Install Docker"
+        run: |
+          curl -fsSL https://get.docker.com -o get-docker.sh
+          sh get-docker.sh
+
       - name: "Install dependencies"
         run: composer install --ansi --no-interaction --no-progress
 
