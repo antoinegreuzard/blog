@@ -55,6 +55,16 @@ jobs:
       - name: "Add PHPUnit matcher"
         run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
 
+      - name: "Create .env.test.local"
+        run: |
+          echo "APP_ENV=test" > .env.test.local
+          echo "APP_DEBUG=1" >> .env.test.local
+          echo "DATABASE_URL=mysql://root:root@127.0.0.1:3306/test" >> .env.test.local
+
+      - name: "Source environment variables"
+        shell: bash
+        run: source .env.test.local
+
       - name: "Set composer cache directory"
         id: composer-cache
         run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
@@ -83,12 +93,6 @@ jobs:
 
       - name: "Install dependencies"
         run: composer install --ansi --no-interaction --no-progress
-
-      - name: "Create .env.test.local"
-        run: |
-          echo "APP_ENV=test" > .env.test.local
-          echo "APP_DEBUG=1" >> .env.test.local
-          echo "DATABASE_URL=mysql://root:root@127.0.0.1:3306/test" >> .env.test.local
 
       - name: "Build and compile assets"
         run: |
