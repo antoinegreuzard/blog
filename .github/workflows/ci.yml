@@ -1,30 +1,16 @@
-name: "Tests"
+name: CI
 
 on:
-  pull_request:
   push:
     branches:
       - main
-
-env:
-  fail-fast: true
-  PHPUNIT_FLAGS: "-v"
-  SYMFONY_PHPUNIT_DIR: "$HOME/symfony-bridge/.phpunit"
-  SYMFONY_DEPRECATIONS_HELPER: 0
-
-permissions:
-  contents: read
+  pull_request:
+    branches:
+      - main
 
 jobs:
-  test:
-    name: "${{ matrix.operating-system }} / PHP ${{ matrix.php-version }}"
-    runs-on: ${{ matrix.operating-system }}
-    continue-on-error: false
-
-    strategy:
-      matrix:
-        operating-system: ['ubuntu-latest']
-        php-version: ['8.2', '8.3']
+  build:
+    runs-on: ubuntu-latest
 
     services:
       mysql:
@@ -32,92 +18,33 @@ jobs:
         env:
           MYSQL_ROOT_PASSWORD: root
           MYSQL_DATABASE: test
-          MYSQL_USER: root
-          MYSQL_PASSWORD: root
         ports:
           - 3306:3306
         options: >-
-          --health-cmd "mysqladmin ping --silent"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 3
+          --health-cmd="mysqladmin ping --silent"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
 
     steps:
-      - name: "Checkout code"
-        uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-      - name: "Install PHP with extensions"
+      - name: Set up PHP
         uses: shivammathur/setup-php@v2
         with:
-          coverage: "none"
-          extensions: "intl, mbstring, pdo_mysql, zip"
-          php-version: ${{ matrix.php-version }}
-          tools: composer:v2
+          php-version: '8.2'
+          extensions: mbstring, intl, pdo_mysql
+          coverage: xdebug
 
-      - name: "Add PHPUnit matcher"
-        run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress --no-suggest
 
-      - name: "Create .env.test.local"
-        run: |
-          echo "APP_ENV=test" > .env.test.local
-          echo "APP_DEBUG=1" >> .env.test.local
-          echo "DATABASE_URL=mysql://root:root@127.0.0.1:3306/test" >> .env.test.local
+      - name: Copy .env.test
+        run: cp .env.test.dist .env.test
 
-      - name: "Source environment variables"
-        shell: bash
-        run: |
-          set -a
-          source .env.test.local
-          set +a
+      - name: Run database migrations
+        run: php bin/console doctrine:migrations:migrate --env=test --no-interaction
 
-      - name: "Set composer cache directory"
-        id: composer-cache
-        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
-
-      - name: "Cache composer"
-        uses: actions/cache@v4
-        with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-${{ hashFiles('composer.lock') }}
-          restore-keys: ${{ runner.os }}-composer-
-
-      - name: "Wait for MySQL to be ready"
-        run: |
-          for i in {30..0}; do
-            if mysqladmin ping -h127.0.0.1 --silent; then
-              break
-            fi
-            echo 'MySQL is unavailable - sleeping'
-            sleep 1
-          done
-          if [ "$i" = 0 ]; then
-            echo 'MySQL did not start in time'
-            exit 1
-          fi
-
-      - name: "Install dependencies"
-        run: composer install --prefer-dist --no-progress --no-suggest --no-interaction
-
-      - name: "Build and compile assets"
-        run: |
-          php bin/console importmap:install
-          php bin/console sass:build
-          php bin/console asset-map:compile
-
-      - name: "Prepare Database"
-        env:
-          DATABASE_URL: mysql://root:root@127.0.0.1:3306/test
-        run: |
-          php bin/console doctrine:database:create --env=test --if-not-exists
-          php bin/console doctrine:schema:update --force --env=test
-
-      - name: "Install PHPUnit"
-        run: vendor/bin/simple-phpunit install
-
-      - name: "PHPUnit version"
-        run: vendor/bin/simple-phpunit --version
-
-      - name: "Run tests"
-        env:
-          DATABASE_URL: mysql://root:root@127.0.0.1:3306/test
-        run: vendor/bin/simple-phpunit ${{ env.PHPUNIT_FLAGS }}
+      - name: Run tests
+        run: vendor/bin/phpunit
