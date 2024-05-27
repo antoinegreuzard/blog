@@ -32,6 +32,8 @@ jobs:
         env:
           MYSQL_ROOT_PASSWORD: root
           MYSQL_DATABASE: test
+          MYSQL_USER: root
+          MYSQL_PASSWORD: root
         ports:
           - 3306:3306
         options: >-
@@ -62,7 +64,11 @@ jobs:
           echo "DATABASE_URL=mysql://root:root@127.0.0.1:3306/test" >> .env.test.local
 
       - name: "Source environment variables"
-        run: source .env.test.local
+        shell: bash
+        run: |
+          set -a
+          source .env.test.local
+          set +a
 
       - name: "Set composer cache directory"
         id: composer-cache
