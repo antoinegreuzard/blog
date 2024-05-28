@@ -25,9 +25,6 @@ jobs:
           --health-timeout=5s
           --health-retries=3
 
-    env:
-      DATABASE_URL: mysql://root:root@127.0.0.1:3306/ci_test_database_test
-
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
@@ -59,7 +56,7 @@ jobs:
         echo 'SYMFONY_DEPRECATIONS_HELPER=999999' >> .env.test.local
         echo 'PANTHER_APP_ENV=panther' >> .env.test.local
         echo 'PANTHER_ERROR_SCREENSHOT_DIR=./var/error-screenshots' >> .env.test.local
-        echo 'DATABASE_URL="mysql://root:root@127.0.0.1:3306/ci_test_database?charset=utf8mb4"' >> .env.test.local
+        echo 'DATABASE_URL="mysql://root:root@127.0.0.1:3306/ci_test_database_test?charset=utf8mb4"' >> .env.test.local
 
     - name: Create databases
       run: |
@@ -70,13 +67,21 @@ jobs:
       run: composer install --prefer-dist --no-progress --no-suggest
 
     - name: Run database migrations for production
+      env:
+        DATABASE_URL: mysql://root:root@127.0.0.1:3306/ci_test_database
       run: php bin/console doctrine:migrations:migrate --env=prod --no-interaction
 
     - name: Run database migrations for test
+      env:
+        DATABASE_URL: mysql://root:root@127.0.0.1:3306/ci_test_database_test
       run: php bin/console doctrine:migrations:migrate --env=test --no-interaction
 
     - name: Clear cache for test
+      env:
+        DATABASE_URL: mysql://root:root@127.0.0.1:3306/ci_test_database_test
       run: php bin/console cache:clear --env=test
 
     - name: Run tests
+      env:
+        DATABASE_URL: mysql://root:root@127.0.0.1:3306/ci_test_database_test
       run: ./bin/phpunit
