@@ -92,7 +92,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
                     ],
                 ],
             ],
-            security: "is_granted('ROLE_ADMIN')",
+            security: "is_granted('ROLE_USER')",
         ),
         new Put(
             uriTemplate: '/categories/{id}',
@@ -123,7 +123,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
                     ],
                 ],
             ],
-            security: "is_granted('ROLE_ADMIN')",
+            security: "is_granted('ROLE_USER')",
         ),
         new Delete(
             uriTemplate: '/categories/{id}',
@@ -136,7 +136,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
                     ],
                 ],
             ],
-            security: "is_granted('ROLE_ADMIN')",
+            security: "is_granted('ROLE_USER')",
         ),
         new Patch(
             uriTemplate: '/categories/{id}',
@@ -167,7 +167,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
                     ],
                 ],
             ],
-            security: "is_granted('ROLE_ADMIN')",
+            security: "is_granted('ROLE_USER')",
         ),
     ],
     normalizationContext: ['groups' => ['category:read']],
