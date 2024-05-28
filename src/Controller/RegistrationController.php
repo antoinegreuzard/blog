@@ -17,71 +17,71 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class RegistrationController extends AbstractController
 {
-  #[Route('/register', name: 'app_register')]
-  public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, UserAuthenticatorInterface $userAuthenticator, UserAuthenticator $authenticator): Response
-  {
-    $user = new User();
-    $form = $this->createForm(RegistrationFormType::class, $user);
-    $form->handleRequest($request);
+    #[Route('/register', name: 'app_register')]
+    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, UserAuthenticatorInterface $userAuthenticator, UserAuthenticator $authenticator): Response
+    {
+        $user = new User();
+        $form = $this->createForm(RegistrationFormType::class, $user);
+        $form->handleRequest($request);
 
-    if ($form->isSubmitted()) {
-      $email = $form->get('email')->getData();
-      $username = $form->get('username')->getData();
-      $plainPassword = $form->get('plainPassword')->getData();
-      $agreeTerms = $form->get('agreeTerms')->getData();
+        if ($form->isSubmitted()) {
+            $email = $form->get('email')->getData();
+            $username = $form->get('username')->getData();
+            $plainPassword = $form->get('plainPassword')->getData();
+            $agreeTerms = $form->get('agreeTerms')->getData();
 
-      $errors = [];
+            $errors = [];
 
-      if (!$email) {
-        $errors[] = 'Email should not be blank.';
-      }
+            if (!$email) {
+                $errors[] = 'Email should not be blank.';
+            }
 
-      if (!$username) {
-        $errors[] = 'Username should not be blank.';
-      }
+            if (!$username) {
+                $errors[] = 'Username should not be blank.';
+            }
 
-      if (!$plainPassword) {
-        $errors[] = 'Password should not be blank.';
-      } elseif (strlen($plainPassword) < 6) {
-        $errors[] = 'Password should be at least 6 characters.';
-      }
+            if (!$plainPassword) {
+                $errors[] = 'Password should not be blank.';
+            } elseif (strlen($plainPassword) < 6) {
+                $errors[] = 'Password should be at least 6 characters.';
+            }
 
-      if (!$agreeTerms) {
-        $errors[] = 'You should agree to our terms.';
-      }
+            if (!$agreeTerms) {
+                $errors[] = 'You should agree to our terms.';
+            }
 
-      if (empty($errors)) {
-        try {
-          $user->setPassword(
-            $userPasswordHasher->hashPassword(
-              $user,
-              $plainPassword
-            )
-          );
+            if (empty($errors)) {
+                try {
+                    $user->setPassword(
+                        $userPasswordHasher->hashPassword(
+                            $user,
+                            $plainPassword
+                        )
+                    );
 
-          $entityManager->persist($user);
-          $entityManager->flush();
+                    $entityManager->persist($user);
+                    $entityManager->flush();
 
-          return $userAuthenticator->authenticateUser(
-            $user,
-            $authenticator,
-            $request
-          );
-        } catch (UniqueConstraintViolationException $e) {
-          $errors[] = 'This email is already registered.';
-        } catch (Exception $e) {
-          $errors[] = 'An unexpected error occurred. Please try again later.';
-          error_log($e->getMessage());
+                    return $userAuthenticator->authenticateUser(
+                        $user,
+                        $authenticator,
+                        $request
+                    );
+                } catch (UniqueConstraintViolationException $e) {
+                    $errors[] = 'This email is already registered.';
+                } catch (Exception $e) {
+                    $errors[] = 'An unexpected error occurred. Please try again later.';
+                    error_log($e->getMessage());
+                }
+            }
+
+            foreach ($errors as $error) {
+                $this->addFlash('error', $error);
+            }
         }
-      }
 
-      foreach ($errors as $error) {
-        $this->addFlash('error', $error);
-      }
+        return $this->render('registration/register.html.twig', [
+            'registrationForm' => $form->createView(),
+        ]);
     }
-
-    return $this->render('registration/register.html.twig', [
-      'registrationForm' => $form->createView(),
-    ]);
-  }
 }
