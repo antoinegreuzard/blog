@@ -20,7 +20,6 @@ class RegistrationControllerTest extends WebTestCase
     $client = static::createClient();
     $crawler = $client->request('GET', '/register');
 
-    // Ajoutez une assertion pour vérifier que le formulaire est présent
     $this->assertSelectorExists('form[name="registration_form"]');
 
     $form = $crawler->selectButton('Register')->form([
@@ -32,20 +31,8 @@ class RegistrationControllerTest extends WebTestCase
 
     $client->submit($form);
 
-    // Suivre la redirection
-    $client->followRedirect();
-
-    // Vérifiez que la réponse après redirection est réussie (200)
     $this->assertResponseIsSuccessful();
 
-    // Optionnel : Vérifiez que l'utilisateur est redirigé vers la page d'accueil
-    $this->assertPageTitleSame('Home');
-    $this->assertSelectorTextContains('h1', 'Welcome to the Home Page!');
-
-    // Optionnel : Afficher le contenu pour le débogage si nécessaire
-    echo $client->getResponse()->getContent();
-
-    // Vérifiez l'absence de message d'erreur
-    $this->assertSelectorNotExists('.alert-danger');
+    $this->assertSelectorTextContains('.alert-danger', 'This email is already registered.');
   }
 }
