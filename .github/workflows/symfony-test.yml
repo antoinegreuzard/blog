@@ -42,10 +42,14 @@ jobs:
                     sleep 5
                   done
 
+            - name: Generate APP_SECRET
+              id: generate_app_secret
+              run: echo "APP_SECRET=$(openssl rand -hex 16)" >> $GITHUB_ENV
+
             - name: Create .env.local file
               run: |
                   echo 'APP_ENV=prod' >> .env.local
-                  echo 'APP_SECRET=e7713776885bb6d32b88e3525d57f64d' >> .env.local
+                  echo "APP_SECRET=${{ env.APP_SECRET }}" >> .env.local
                   echo 'DATABASE_URL="mysql://root:root@127.0.0.1:3306/ci_test_database?charset=utf8mb4"' >> .env.local
 
             - name: Create .env.test.local file
