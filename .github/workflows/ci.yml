@@ -26,11 +26,24 @@ jobs:
           --health-retries=3
 
     env:
-      MYSQL_ROOT_PASSWORD: root
+      DATABASE_URL: mysql://root:root@127.0.0.1:3306/ci_test_database_test
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
+
+    - name: Set up PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.2'
+        extensions: mbstring, intl, pdo_mysql
+
+    - name: Wait for MySQL
+      run: |
+        until mysqladmin ping --host=127.0.0.1 --user=root --password=root --silent; do
+          echo 'waiting for mysql to be connectable...'
+          sleep 5
+        done
 
     - name: Create .env.local file
       run: |
@@ -50,8 +63,8 @@ jobs:
 
     - name: Create databases
       run: |
-        mysql -uroot -proot -e "CREATE DATABASE IF NOT EXISTS ci_test_database;"
-        mysql -uroot -proot -e "CREATE DATABASE IF NOT EXISTS ci_test_database_test;"
+        mysql --host=127.0.0.1 --user=root --password=root --execute="CREATE DATABASE IF NOT EXISTS ci_test_database;"
+        mysql --host=127.0.0.1 --user=root --password=root --execute="CREATE DATABASE IF NOT EXISTS ci_test_database_test;"
 
     - name: Install dependencies
       run: composer install --prefer-dist --no-progress --no-suggest
