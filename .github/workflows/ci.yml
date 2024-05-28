@@ -78,4 +78,4 @@ jobs:
       - name: Run tests
         env:
           DATABASE_URL: mysql://root:root@127.0.0.1:3306/ci_test_database
-        run: ./bin/phpunit tests/Controller/HomeControllerTest.php
+        run: ./bin/phpunit tests/Entity
