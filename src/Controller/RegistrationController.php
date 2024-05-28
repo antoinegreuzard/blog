@@ -65,6 +65,7 @@ class RegistrationController extends AbstractController
           $errors[] = 'This email is already registered.';
         } catch (Exception $e) {
           $errors[] = 'An unexpected error occurred. Please try again later.';
+          error_log($e->getMessage());
         }
       }
 
