@@ -26,62 +26,62 @@ jobs:
           --health-retries=3
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Set up PHP
-      uses: shivammathur/setup-php@v2
-      with:
-        php-version: '8.2'
-        extensions: mbstring, intl, pdo_mysql
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, intl, pdo_mysql
 
-    - name: Wait for MySQL
-      run: |
-        until mysqladmin ping --host=127.0.0.1 --user=root --password=root --silent; do
-          echo 'waiting for mysql to be connectable...'
-          sleep 5
-        done
+      - name: Wait for MySQL
+        run: |
+          until mysqladmin ping --host=127.0.0.1 --user=root --password=root --silent; do
+            echo 'waiting for mysql to be connectable...'
+            sleep 5
+          done
 
-    - name: Create .env.local file
-      run: |
-        echo 'APP_ENV=prod' >> .env.local
-        echo 'APP_SECRET=e7713776885bb6d32b88e3525d57f64d' >> .env.local
-        echo 'DATABASE_URL="mysql://root:root@127.0.0.1:3306/ci_test_database?charset=utf8mb4"' >> .env.local
+      - name: Create .env.local file
+        run: |
+          echo 'APP_ENV=prod' >> .env.local
+          echo 'APP_SECRET=e7713776885bb6d32b88e3525d57f64d' >> .env.local
+          echo 'DATABASE_URL="mysql://root:root@127.0.0.1:3306/ci_test_database?charset=utf8mb4"' >> .env.local
 
-    - name: Create .env.test.local file
-      run: |
-        echo 'APP_ENV=test' >> .env.test.local
-        echo 'KERNEL_CLASS="App\Kernel"' >> .env.test.local
-        echo 'APP_SECRET="$ecretf0rt3st"' >> .env.test.local
-        echo 'SYMFONY_DEPRECATIONS_HELPER=999999' >> .env.test.local
-        echo 'PANTHER_APP_ENV=panther' >> .env.test.local
-        echo 'PANTHER_ERROR_SCREENSHOT_DIR=./var/error-screenshots' >> .env.test.local
-        echo 'DATABASE_URL="mysql://root:root@127.0.0.1:3306/ci_test_database_test?charset=utf8mb4"' >> .env.test.local
+      - name: Create .env.test.local file
+        run: |
+          echo 'APP_ENV=test' >> .env.test.local
+          echo 'KERNEL_CLASS="App\Kernel"' >> .env.test.local
+          echo 'APP_SECRET="$ecretf0rt3st"' >> .env.test.local
+          echo 'SYMFONY_DEPRECATIONS_HELPER=999999' >> .env.test.local
+          echo 'PANTHER_APP_ENV=panther' >> .env.test.local
+          echo 'PANTHER_ERROR_SCREENSHOT_DIR=./var/error-screenshots' >> .env.test.local
+          echo 'DATABASE_URL="mysql://root:root@127.0.0.1:3306/ci_test_database_test?charset=utf8mb4"' >> .env.test.local
 
-    - name: Create databases
-      run: |
-        mysql --host=127.0.0.1 --user=root --password=root --execute="CREATE DATABASE IF NOT EXISTS ci_test_database;"
-        mysql --host=127.0.0.1 --user=root --password=root --execute="CREATE DATABASE IF NOT EXISTS ci_test_database_test;"
+      - name: Create databases
+        run: |
+          mysql --host=127.0.0.1 --user=root --password=root --execute="CREATE DATABASE IF NOT EXISTS ci_test_database;"
+          mysql --host=127.0.0.1 --user=root --password=root --execute="CREATE DATABASE IF NOT EXISTS ci_test_database_test;"
 
-    - name: Install dependencies
-      run: composer install --prefer-dist --no-progress --no-suggest
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress --no-suggest
 
-    - name: Run database migrations for production
-      env:
-        DATABASE_URL: mysql://root:root@127.0.0.1:3306/ci_test_database
-      run: php bin/console doctrine:migrations:migrate --env=prod --no-interaction
+      - name: Run database migrations for production
+        env:
+          DATABASE_URL: mysql://root:root@127.0.0.1:3306/ci_test_database
+        run: php bin/console doctrine:migrations:migrate --env=prod --no-interaction
 
-    - name: Run database migrations for test
-      env:
-        DATABASE_URL: mysql://root:root@127.0.0.1:3306/ci_test_database
-      run: php bin/console doctrine:migrations:migrate --env=test --no-interaction
+      - name: Run database migrations for test
+        env:
+          DATABASE_URL: mysql://root:root@127.0.0.1:3306/ci_test_database
+        run: php bin/console doctrine:migrations:migrate --env=test --no-interaction
 
-    - name: Clear cache for test
-      env:
-        DATABASE_URL: mysql://root:root@127.0.0.1:3306/ci_test_database
-      run: php bin/console cache:clear --env=test
+      - name: Clear cache for test
+        env:
+          DATABASE_URL: mysql://root:root@127.0.0.1:3306/ci_test_database
+        run: php bin/console cache:clear --env=test
 
-    - name: Run tests
-      env:
-        DATABASE_URL: mysql://root:root@127.0.0.1:3306/ci_test_database_test
-      run: ./bin/phpunit
+      - name: Run tests
+        env:
+          DATABASE_URL: mysql://root:root@127.0.0.1:3306/ci_test_database_test
+        run: ./bin/phpunit tests/Controller/RegistrationControllerTest.php

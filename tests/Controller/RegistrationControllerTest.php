@@ -20,6 +20,8 @@ class RegistrationControllerTest extends WebTestCase
     $client = static::createClient();
     $crawler = $client->request('GET', '/register');
 
+    $this->assertSelectorExists('form[name="registration_form"]');
+
     $form = $crawler->selectButton('Register')->form([
       'registration_form[email]' => 'test@example.com',
       'registration_form[username]' => 'testuser',
@@ -29,8 +31,8 @@ class RegistrationControllerTest extends WebTestCase
 
     $client->submit($form);
 
-    // Check if the response contains error message about existing email
+    $this->assertResponseIsSuccessful();
+
     $this->assertSelectorTextContains('.alert-danger', 'This email is already registered.');
   }
 }
-    
