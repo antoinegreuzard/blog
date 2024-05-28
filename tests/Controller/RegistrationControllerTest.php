@@ -33,6 +33,8 @@ class RegistrationControllerTest extends WebTestCase
 
     $this->assertResponseIsSuccessful();
 
+    echo $client->getResponse()->getContent();
+
     $this->assertSelectorTextContains('.alert-danger', 'This email is already registered.');
   }
 }
