@@ -1,4 +1,4 @@
-# Project Name
+# Blog
 
 This is a Symfony project implementing a basic web application with user registration, login, and category management using the API Platform and JWT authentication.
 
@@ -27,7 +27,7 @@ This is a Symfony project implementing a basic web application with user registr
 1. Clone the repository:
 
     ```sh
-    git clone https://github.com/your-repo/project-name.git
+    git clone https://github.com/antoinegreuzard/blog.git
     cd project-name
     ```
 
