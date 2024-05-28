@@ -17,7 +17,6 @@ jobs:
         image: mysql:5.7
         env:
           MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: ci_test_database
         ports:
           - 3306:3306
         options: >-
@@ -32,7 +31,7 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v2
 
     - name: Set up PHP
       uses: shivammathur/setup-php@v2
@@ -43,6 +42,12 @@ jobs:
     - name: Install dependencies
       run: composer install --prefer-dist --no-progress --no-suggest
 
+    - name: Create .env.local file
+      run: |
+        echo 'APP_ENV=prod' >> .env.local
+        echo 'APP_SECRET=e7713776885bb6d32b88e3525d57f64d' >> .env.local
+        echo 'DATABASE_URL="mysql://root:root@127.0.0.1:3306/ci_database?charset=utf8mb4"' >> .env.local
+
     - name: Create .env.test.local file
       run: |
         echo 'KERNEL_CLASS="App\Kernel"' >> .env.test.local
@@ -50,20 +55,21 @@ jobs:
         echo 'SYMFONY_DEPRECATIONS_HELPER=999999' >> .env.test.local
         echo 'PANTHER_APP_ENV=panther' >> .env.test.local
         echo 'PANTHER_ERROR_SCREENSHOT_DIR=./var/error-screenshots' >> .env.test.local
-        echo 'MYSQL_ROOT_PASSWORD=root' >> .env.test.local
-        echo 'MYSQL_DATABASE=ci_test_database' >> .env.test.local
-        echo 'MYSQL_USER=root' >> .env.test.local
-        echo 'MYSQL_PASSWORD=root' >> .env.test.local
-        echo 'MYSQL_PORT=3306' >> .env.test.local
-        echo 'DATABASE_URL="mysql://root:root@127.0.0.1:3306/ci_test_database?charset=utf8mb4"' >> .env.test.local
+        echo 'DATABASE_URL="mysql://root:root@127.0.0.1:3306/ci_test_database_test?charset=utf8mb4"' >> .env.test.local
+
+    - name: Create production database
+      run: php bin/console doctrine:database:create --env=prod
 
     - name: Create test database
       run: php bin/console doctrine:database:create --env=test
 
-    - name: Run database migrations
+    - name: Run database migrations for production
+      run: php bin/console doctrine:migrations:migrate --env=prod --no-interaction
+
+    - name: Run database migrations for test
       run: php bin/console doctrine:migrations:migrate --env=test --no-interaction
 
-    - name: Clear cache
+    - name: Clear cache for test
       run: php bin/console cache:clear --env=test
 
     - name: Run tests
