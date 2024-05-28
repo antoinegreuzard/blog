@@ -1,7 +1,6 @@
 # Project Name
 
-This is a Symfony project implementing a basic web application with user registration, login, and category management
-using the API Platform.
+This is a Symfony project implementing a basic web application with user registration, login, and category management using the API Platform and JWT authentication.
 
 ## Table of Contents
 
@@ -13,6 +12,7 @@ using the API Platform.
 - [Entities](#entities)
 - [Forms](#forms)
 - [API](#api)
+- [Authentication](#authentication)
 - [Testing](#testing)
 - [API Documentation](#api-documentation)
 
@@ -44,14 +44,28 @@ using the API Platform.
     # Update DATABASE_URL in .env.local
     ```
 
-4. Create the database and run migrations:
+4. Generate SSL keys for JWT authentication:
+
+    ```sh
+    mkdir -p config/jwt
+    openssl genrsa -out config/jwt/private.pem -aes256 4096
+    openssl rsa -pubout -in config/jwt/private.pem -out config/jwt/public.pem
+    ```
+
+5. Add the JWT passphrase to your `.env` file:
+
+    ```env
+    JWT_PASSPHRASE=your-passphrase
+    ```
+
+6. Create the database and run migrations:
 
     ```sh
     php bin/console doctrine:database:create
     php bin/console doctrine:migrations:migrate
     ```
 
-5. Start the development server:
+7. Start the development server:
 
     ```sh
     symfony server:start
@@ -126,6 +140,50 @@ This project uses the API Platform to expose the following resources:
   - `PUT /users/{id}`: Update a user (current user).
   - `DELETE /users/{id}`: Delete a user (current user).
   - `PATCH /users/{id}`: Partially update a user (current user).
+
+## Authentication
+
+This project uses JWT authentication to secure the API endpoints.
+
+### Obtaining a Token
+
+1. **Create a New Request in Postman**:
+  - **Method**: POST
+  - **URL**: `http://localhost:8000/api/login_check`
+  - **Headers**:
+    - `Content-Type`: `application/json`
+  - **Body** (raw, JSON):
+
+    ```json
+    {
+      "email": "your_email",
+      "password": "your_password"
+    }
+    ```
+
+2. **Send the Request**: Click "Send" and you should receive a response containing a JWT token.
+
+### Using the Token
+
+1. **Create a New Request in Postman**:
+  - **Method**: POST
+  - **URL**: `http://localhost:8000/api/posts`
+  - **Headers**:
+    - `Content-Type`: `application/json`
+    - `Authorization`: `Bearer YOUR_JWT_TOKEN`
+  - **Body** (raw, JSON):
+
+    ```json
+    {
+      "title": "My New Post",
+      "content": "This is the content of my new post.",
+      "slug": "my-new-post",
+      "category": "/categories/1",
+      "author": "/users/1"
+    }
+    ```
+
+2. **Send the Request**: Click "Send".
 
 ## Testing
 
