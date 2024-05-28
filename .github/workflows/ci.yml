@@ -57,27 +57,21 @@ jobs:
         echo 'PANTHER_ERROR_SCREENSHOT_DIR=./var/error-screenshots' >> .env.test.local
         echo 'DATABASE_URL="mysql://root:root@127.0.0.1:3306/ci_test_database_test?charset=utf8mb4"' >> .env.test.local
 
-    - name: Create production and test databases
+    - name: Create databases
       run: |
         mysql --user=root --password=root --execute="CREATE DATABASE IF NOT EXISTS ci_test_database;"
         mysql --user=root --password=root --execute="CREATE DATABASE IF NOT EXISTS ci_test_database_test;"
 
     - name: Run database migrations for production
-      env:
-        DATABASE_URL: mysql://root:root@127.0.0.1:3306/ci_test_database
-      run: php bin/console doctrine:migrations:migrate --env=prod --no-interaction
+      run: |
+        php bin/console doctrine:migrations:migrate --env=prod --no-interaction
 
     - name: Run database migrations for test
-      env:
-        DATABASE_URL: mysql://root:root@127.0.0.1:3306/ci_test_database_test
-      run: php bin/console doctrine:migrations:migrate --env=test --no-interaction
+      run: |
+        php bin/console doctrine:migrations:migrate --env=test --no-interaction
 
     - name: Clear cache for test
-      env:
-        DATABASE_URL: mysql://root:root@127.0.0.1:3306/ci_test_database_test
       run: php bin/console cache:clear --env=test
 
     - name: Run tests
-      env:
-        DATABASE_URL: mysql://root:root@127.0.0.1:3306/ci_test_database_test
       run: ./bin/phpunit
