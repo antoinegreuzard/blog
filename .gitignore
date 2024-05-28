@@ -3,6 +3,7 @@
 /.env.local
 /.env.local.php
 /.env.*.local
+/.envrc
 /config/secrets/prod/prod.decrypt.private.php
 /data
 /public/bundles/
