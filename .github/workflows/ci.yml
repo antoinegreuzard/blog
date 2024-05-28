@@ -25,9 +25,6 @@ jobs:
           --health-timeout=5s
           --health-retries=3
 
-    env:
-      DATABASE_URL: mysql://root:root@127.0.0.1:3306/ci_test_database_test
-
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
@@ -57,11 +54,10 @@ jobs:
         echo 'PANTHER_ERROR_SCREENSHOT_DIR=./var/error-screenshots' >> .env.test.local
         echo 'DATABASE_URL="mysql://root:root@127.0.0.1:3306/ci_test_database_test?charset=utf8mb4"' >> .env.test.local
 
-    - name: Create production database
-      run: mysql --user=root --password=root --execute="CREATE DATABASE ci_test_database;"
-
-    - name: Create test database
-      run: mysql --user=root --password=root --execute="CREATE DATABASE ci_test_database_test;"
+    - name: Create production and test databases
+      run: |
+        mysql --user=root --password=root --execute="CREATE DATABASE IF NOT EXISTS ci_test_database;"
+        mysql --user=root --password=root --execute="CREATE DATABASE IF NOT EXISTS ci_test_database_test;"
 
     - name: Run database migrations for production
       run: php bin/console doctrine:migrations:migrate --env=prod --no-interaction
