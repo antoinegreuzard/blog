@@ -69,5 +69,8 @@ jobs:
                   DATABASE_URL: mysql://root:root@127.0.0.1:3306/ci_test_database
               run: php bin/console cache:clear --env=test
 
+            - name: Clear Symfony cache
+              run: php bin/console cache:clear --env=dev
+
             - name: Run PHPStan
               run: vendor/bin/phpstan analyse
