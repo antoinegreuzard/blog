@@ -26,20 +26,11 @@ jobs:
           --health-retries=3
 
     env:
-      DATABASE_URL: mysql://root:root@127.0.0.1:3306/ci_test_database_test
+      MYSQL_ROOT_PASSWORD: root
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
-
-    - name: Set up PHP
-      uses: shivammathur/setup-php@v2
-      with:
-        php-version: '8.2'
-        extensions: mbstring, intl, pdo_mysql
-
-    - name: Install dependencies
-      run: composer install --prefer-dist --no-progress --no-suggest
 
     - name: Create .env.local file
       run: |
@@ -59,16 +50,17 @@ jobs:
 
     - name: Create databases
       run: |
-        mysql --user=root --password=root --execute="CREATE DATABASE IF NOT EXISTS ci_test_database;"
-        mysql --user=root --password=root --execute="CREATE DATABASE IF NOT EXISTS ci_test_database_test;"
+        mysql -uroot -proot -e "CREATE DATABASE IF NOT EXISTS ci_test_database;"
+        mysql -uroot -proot -e "CREATE DATABASE IF NOT EXISTS ci_test_database_test;"
+
+    - name: Install dependencies
+      run: composer install --prefer-dist --no-progress --no-suggest
 
     - name: Run database migrations for production
-      run: |
-        php bin/console doctrine:migrations:migrate --env=prod --no-interaction
+      run: php bin/console doctrine:migrations:migrate --env=prod --no-interaction
 
     - name: Run database migrations for test
-      run: |
-        php bin/console doctrine:migrations:migrate --env=test --no-interaction
+      run: php bin/console doctrine:migrations:migrate --env=test --no-interaction
 
     - name: Clear cache for test
       run: php bin/console cache:clear --env=test
