@@ -2,68 +2,93 @@
 
 namespace App\Tests\Controller;
 
+use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Doctrine\ORM\EntityManagerInterface;
+use App\Entity\User;
 
 class SecurityControllerTest extends WebTestCase
 {
-  public function testLoginPageLoads()
-  {
-    $client = static::createClient();
-    $client->request('GET', '/login');
+    public function testLoginPageLoads()
+    {
+        $client = static::createClient();
+        $client->request('GET', '/login');
 
-    $this->assertResponseIsSuccessful();
-    $this->assertSelectorTextContains('h1', 'Login');
-  }
+        $this->assertResponseIsSuccessful();
+        $this->assertSelectorTextContains('h1', 'Login');
+    }
 
-  public function testLoginFormSubmission()
-  {
-    $client = static::createClient();
-    $crawler = $client->request('GET', '/login');
+    public function testLoginFormSubmission()
+    {
+        $client = static::createClient();
 
-    $form = $crawler->selectButton('Sign in')->form([
-      'email' => 'test@example.com',
-      'password' => 'password123',
-    ]);
+        $container = $client->getContainer();
 
-    $client->submit($form);
+        $entityManager = $container->get(EntityManagerInterface::class);
 
-    // Follow the redirect to see the final destination
-    $client->followRedirect();
+        $userRepository = $container->get(UserRepository::class);
 
-    // Check if the final destination is the login page, indicating a failed login attempt
-    $this->assertResponseIsSuccessful();
-    $this->assertEquals('/login', $client->getRequest()->getPathInfo());
-  }
+        $testUser = $userRepository->findOneByEmail('test@example.com');
 
-  public function testLoginFormSubmissionWithInvalidCredentials()
-  {
-    $client = static::createClient();
-    $crawler = $client->request('GET', '/login');
+        if (!$testUser) {
+            $testUser = new User();
+            $testUser->setEmail('test@example.com');
+            $testUser->setUsername('test');
+            $testUser->setPassword(password_hash('password123', PASSWORD_BCRYPT));
 
-    $form = $crawler->selectButton('Sign in')->form([
-      'email' => 'wrong@example.com',
-      'password' => 'wrongpassword',
-    ]);
+            $entityManager->persist($testUser);
+            $entityManager->flush();
+        }
 
-    $client->submit($form);
+        $crawler = $client->request('GET', '/login');
 
-    // Follow the redirect to see the error message
-    $client->followRedirect();
-    $this->assertSelectorExists('.alert-danger');
-    $this->assertSelectorTextContains('.alert-danger', 'Invalid credentials.');
-  }
+        $csrfToken = $crawler->filter('input[name=_csrf_token]')->attr('value');
 
-  public function testLogout()
-  {
-    $client = static::createClient();
-    $client->request('GET', '/logout');
+        $client->request('POST', '/login', [
+            'email' => 'test@example.com',
+            'password' => 'password123',
+            '_csrf_token' => $csrfToken,
+        ]);
 
-    // Follow the redirect to see the final destination
-    $client->followRedirect();
+        $client->followRedirect();
 
-    // Check if the final destination is the homepage
-    $this->assertResponseIsSuccessful();
-    $this->assertEquals('/', $client->getRequest()->getPathInfo());
-  }
+
+        $content = $client->getResponse()->getContent();
+
+        $this->assertResponseIsSuccessful();
+
+        $this->assertEquals('/', $client->getRequest()->getPathInfo());
+    }
+
+    public function testLoginFormSubmissionWithInvalidCredentials()
+    {
+        $client = static::createClient();
+        $crawler = $client->request('GET', '/login');
+
+        $form = $crawler->selectButton('Sign in')->form([
+            'email' => 'wrong@example.com',
+            'password' => 'wrongpassword',
+        ]);
+
+        $client->submit($form);
+
+        // Follow the redirect to see the error message
+        $client->followRedirect();
+        $this->assertSelectorExists('.alert-danger');
+        $this->assertSelectorTextContains('.alert-danger', 'Invalid credentials.');
+    }
+
+    public function testLogout()
+    {
+        $client = static::createClient();
+        $client->request('GET', '/logout');
+
+        // Follow the redirect to see the final destination
+        $client->followRedirect();
+
+        // Check if the final destination is the homepage
+        $this->assertResponseIsSuccessful();
+        $this->assertEquals('/', $client->getRequest()->getPathInfo());
+    }
 }
     

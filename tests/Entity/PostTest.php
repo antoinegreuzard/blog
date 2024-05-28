@@ -6,37 +6,36 @@ use App\Entity\Post;
 use App\Entity\Category;
 use App\Entity\User;
 use PHPUnit\Framework\TestCase;
-use DateTimeImmutable;
 
 class PostTest extends TestCase
 {
-  public function testGetTitle()
-  {
-    $post = new Post();
-    $post->setTitle('My First Post');
+    public function testGetTitle()
+    {
+        $post = new Post();
+        $post->setTitle('My First Post');
 
-    $this->assertEquals('My First Post', $post->getTitle());
-  }
+        $this->assertEquals('My First Post', $post->getTitle());
+    }
 
-  public function testSetGetCategory()
-  {
-    $category = new Category();
-    $category->setName('Technology');
+    public function testSetGetCategory()
+    {
+        $category = new Category();
+        $category->setName('Technology');
 
-    $post = new Post();
-    $post->setCategory($category);
+        $post = new Post();
+        $post->setCategory($category);
 
-    $this->assertEquals($category, $post->getCategory());
-  }
+        $this->assertEquals($category, $post->getCategory());
+    }
 
-  public function testSetGetAuthor()
-  {
-    $user = new User();
-    $user->setUsername('johndoe');
+    public function testSetGetAuthor()
+    {
+        $user = new User();
+        $user->setUsername('johndoe');
 
-    $post = new Post();
-    $post->setAuthor($user);
+        $post = new Post();
+        $post->setAuthor($user);
 
-    $this->assertEquals($user, $post->getAuthor());
-  }
+        $this->assertEquals($user, $post->getAuthor());
+    }
 }

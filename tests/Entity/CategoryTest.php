@@ -7,11 +7,11 @@ use PHPUnit\Framework\TestCase;
 
 class CategoryTest extends TestCase
 {
-  public function testGetName()
-  {
-    $category = new Category();
-    $category->setName('Technology');
+    public function testGetName()
+    {
+        $category = new Category();
+        $category->setName('Technology');
 
-    $this->assertEquals('Technology', $category->getName());
-  }
+        $this->assertEquals('Technology', $category->getName());
+    }
 }
