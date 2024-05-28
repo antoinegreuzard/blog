@@ -6,7 +6,9 @@ use App\Entity\User;
 use App\Form\RegistrationFormType;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
+use App\Security\UserAuthenticator;
 use Exception;
+use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,7 +18,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class RegistrationController extends AbstractController
 {
   #[Route('/register', name: 'app_register')]
-  public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
+  public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, UserAuthenticatorInterface $userAuthenticator, UserAuthenticator $authenticator): Response
   {
     $user = new User();
     $form = $this->createForm(RegistrationFormType::class, $user);
@@ -60,7 +62,11 @@ class RegistrationController extends AbstractController
           $entityManager->persist($user);
           $entityManager->flush();
 
-          return $this->redirectToRoute('home');
+          return $userAuthenticator->authenticateUser(
+            $user,
+            $authenticator,
+            $request
+          );
         } catch (UniqueConstraintViolationException $e) {
           $errors[] = 'This email is already registered.';
         } catch (Exception $e) {
