@@ -206,6 +206,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['user:read', 'user:write'])]
     private ?string $email = null;
 
+    /**
+     * @var array<int, string>
+     */
     #[ORM\Column]
     #[Groups(['user:read', 'user:write'])]
     private array $roles = [];
@@ -223,6 +226,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['user:read', 'user:write'])]
     private ?string $username = null;
 
+    /**
+     * @var Collection<int, Post>
+     */
     #[ORM\OneToMany(targetEntity: Post::class, mappedBy: 'author', orphanRemoval: true)]
     #[Groups(['user:read'])]
     private Collection $posts;
@@ -271,6 +277,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return array_unique($roles);
     }
 
+    /**
+     * @param array<int, string> $roles
+     * @return $this
+     */
     public function setRoles(array $roles): self
     {
         $this->roles = $roles;
@@ -315,7 +325,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection
+     * @return Collection<int, Post>
      */
     public function getPosts(): Collection
     {
