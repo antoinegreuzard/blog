@@ -50,20 +50,28 @@ This is a Symfony project implementing a basic web application with user registr
     php bin/console lexik:jwt:generate-keypair
     ```
 
-5. Add the JWT passphrase to your `.env` file:
+    ou
+   
+    ```sh
+    mkdir -p config/jwt
+    openssl genrsa -out config/jwt/private.pem -aes256 4096
+    openssl rsa -pubout -in config/jwt/private.pem -out config/jwt/public.pem
+    ```
+
+6. Add the JWT passphrase to your `.env` file:
 
     ```env
     JWT_PASSPHRASE=your-passphrase
     ```
 
-6. Create the database and run migrations:
+7. Create the database and run migrations:
 
     ```sh
     php bin/console doctrine:database:create
     php bin/console doctrine:migrations:migrate
     ```
 
-7. Start the development server:
+8. Start the development server:
 
     ```sh
     symfony server:start
