@@ -202,6 +202,7 @@ This project uses JWT authentication to secure the API endpoints.
 To run the tests, use the following command:
 
 ```sh
+php bin/console doctrine:migrations:migrate --env=test
 php bin/phpunit
 ```
 
