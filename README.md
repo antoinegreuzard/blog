@@ -77,6 +77,12 @@ This is a Symfony project implementing a basic web application with user registr
     symfony server:start
     ```
 
+    ou
+
+    ```sh
+    php -S localhost:8000 -t public
+    ```
+
 ## Usage
 
 - Access the home page at `http://localhost:8000/`
