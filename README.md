@@ -47,9 +47,7 @@ This is a Symfony project implementing a basic web application with user registr
 4. Generate SSL keys for JWT authentication:
 
     ```sh
-    mkdir -p config/jwt
-    openssl genrsa -out config/jwt/private.pem -aes256 4096
-    openssl rsa -pubout -in config/jwt/private.pem -out config/jwt/public.pem
+    php bin/console lexik:jwt:generate-keypair
     ```
 
 5. Add the JWT passphrase to your `.env` file:
