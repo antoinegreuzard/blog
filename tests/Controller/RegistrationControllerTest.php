@@ -6,17 +6,50 @@ use App\Entity\User;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
+/**
+ * Class RegistrationControllerTest
+ *
+ * This class extends WebTestCase, which provides the functionality for testing
+ * HTTP paper_testing_library. It contains tests to validate the behavior of
+ * the registration feature in a web application.
+ *
+ * Properties:
+ * @private  KernelBrowser $client - A client instance used to make requests.
+ * @private  ?object $entityManager - An entity manager instance used to
+ * interact with the database.
+ *
+ * Methods:
+ * @protected setUp(): void - This method sets up the test environment,
+ * called before execution of each test method.
+ * @protected tearDown(): void - This method tears down the test environment,
+ * called after execution of each test method.
+ * @public testRegisterPageLoadsCorrectly() - This test ensures that the
+ * registration page loads successfully.
+ * @public testFormSubmissionWithValidData() - This test ensures that the
+ * registration form behaves as expected when submitted with valid data.
+ * @public testDuplicateEmailSubmission() - This test ensures that the
+ * registration form behaves as expected when an attempt is made to register
+ * an email that already exists.
+ */
 class RegistrationControllerTest extends WebTestCase
 {
     private KernelBrowser $client;
     private ?object $entityManager;
 
+    /**
+     * @return void
+     */
     protected function setUp(): void
     {
         $this->client = static::createClient();
-        $this->entityManager = $this->client->getContainer()->get('doctrine.orm.entity_manager');
+        $this->entityManager = $this->client->getContainer()->get(
+            'doctrine.orm.entity_manager'
+        );
     }
 
+    /**
+     * @return void
+     */
     protected function tearDown(): void
     {
         parent::tearDown();
@@ -27,6 +60,9 @@ class RegistrationControllerTest extends WebTestCase
         }
     }
 
+    /**
+     * @return void
+     */
     public function testRegisterPageLoadsCorrectly()
     {
         $crawler = $this->client->request('GET', '/register');
@@ -36,6 +72,9 @@ class RegistrationControllerTest extends WebTestCase
         $this->assertCount(1, $crawler->filter('form'));
     }
 
+    /**
+     * @return void
+     */
     public function testFormSubmissionWithValidData()
     {
         $crawler = $this->client->request('GET', '/register');
@@ -49,11 +88,16 @@ class RegistrationControllerTest extends WebTestCase
 
         $this->client->submit($form);
         $this->assertResponseRedirects('/');
-        $user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => 'test@example.com']);
+        $user = $this->entityManager->getRepository(User::class)->findOneBy(
+            ['email' => 'test@example.com']
+        );
         $this->assertNotNull($user);
         $this->assertSame('testuser', $user->getUsername());
     }
 
+    /**
+     * @return void
+     */
     public function testDuplicateEmailSubmission()
     {
         $crawler = $this->client->request('GET', '/register');
@@ -71,6 +115,9 @@ class RegistrationControllerTest extends WebTestCase
         $this->client->submit($form);
 
         $this->assertSelectorExists('.alert-danger');
-        $this->assertSelectorTextContains('.alert-danger', 'This email is already registered.');
+        $this->assertSelectorTextContains(
+            '.alert-danger',
+            'This email is already registered.'
+        );
     }
 }
