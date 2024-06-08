@@ -1,0 +1,82 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+    phpcs:
+        runs-on: ubuntu-latest
+
+        services:
+            mysql:
+                image: mysql:5.7
+                env:
+                    MYSQL_ROOT_PASSWORD: root
+                ports:
+                    - 3306:3306
+                options: >-
+                  --health-cmd="mysqladmin ping --silent"
+                  --health-interval=10s
+                  --health-timeout=5s
+                  --health-retries=3
+
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Set up PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: '8.2'
+                  extensions: mbstring, intl, pdo_mysql
+                  tools: composer
+
+            - name: Wait for MySQL
+              run: |
+                  until mysqladmin ping --host=127.0.0.1 --user=root --password=root --silent; do
+                    echo 'waiting for mysql to be connectable...'
+                    sleep 5
+                  done
+
+            - name: Generate APP_SECRET
+              id: generate_app_secret
+              run: echo "APP_SECRET=$(openssl rand -hex 16)" >> $GITHUB_ENV
+
+            - name: Create .env.local file
+              run: |
+                  echo 'APP_ENV=prod' >> .env.local
+                  echo "APP_SECRET=${{ env.APP_SECRET }}" >> .env.local
+                  echo 'DATABASE_URL="mysql://root:root@127.0.0.1:3306/ci_test_database?charset=utf8mb4"' >> .env.local
+
+            - name: Create .env.test.local file
+              run: |
+                echo 'DATABASE_URL="mysql://root:root@127.0.0.1:3306/ci_test_database_test?charset=utf8mb4"' >> .env.test.local
+
+            - name: Create databases
+              run: |
+                  mysql --host=127.0.0.1 --user=root --password=root --execute="CREATE DATABASE IF NOT EXISTS ci_test_database;"
+                  mysql --host=127.0.0.1 --user=root --password=root --execute="CREATE DATABASE IF NOT EXISTS ci_test_database_test;"
+
+            - name: Install dependencies
+              run: composer install --prefer-dist --no-progress --no-suggest --no-interaction
+
+            - name: Run database migrations for production
+              env:
+                  DATABASE_URL: mysql://root:root@127.0.0.1:3306/ci_test_database
+              run: php bin/console doctrine:migrations:migrate --env=prod --no-interaction
+
+            - name: Run database migrations for test
+              env:
+                  DATABASE_URL: mysql://root:root@127.0.0.1:3306/ci_test_database
+              run: php bin/console doctrine:migrations:migrate --env=test --no-interaction
+
+            - name: Clear cache for test
+              env:
+                  DATABASE_URL: mysql://root:root@127.0.0.1:3306/ci_test_database
+              run: php bin/console cache:clear --env=test
+
+            - name: Clear Symfony cache
+              run: php bin/console cache:clear --env=dev
+
+            - name: Run PHP CodeSniffer
+              run: |
+                vendor/bin/phpcs --config-set installed_paths vendor/escapestudios/symfony2-coding-standard
+                vendor/bin/phpcs

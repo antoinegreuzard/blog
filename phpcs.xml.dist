@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ruleset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="vendor/squizlabs/php_codesniffer/phpcs.xsd">
+
+    <description>Custom coding standard for the project</description>
+
+    <arg name="basepath" value="."/>
+    <arg name="cache" value=".phpcs-cache"/>
+    <arg name="colors"/>
+    <arg name="extensions" value="php"/>
+
+    <rule ref="PSR12">
+        <exclude name="Generic.Files.LineLength"/>
+    </rule>
+    <rule ref="Symfony">
+        <exclude name="Squiz.Strings.ConcatenationSpacing"/>
+        <exclude name="Squiz.Functions.MultiLineFunctionDeclaration.SpaceAfterParamType"/>
+        <exclude name="Squiz.Functions.FunctionDeclarationArgumentSpacing"/>
+        <exclude name="Squiz.Commenting.FunctionComment"/>
+    </rule>
+
+    <file>bin/</file>
+    <file>config/</file>
+    <file>src/</file>
+    <file>tests/</file>
+</ruleset>
