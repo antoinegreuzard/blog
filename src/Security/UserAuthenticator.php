@@ -80,9 +80,9 @@ class UserAuthenticator extends AbstractLoginFormAuthenticator
     }
 
     /**
-     * @param Request $request
+     * @param Request        $request
      * @param TokenInterface $token
-     * @param string $firewallName
+     * @param string         $firewallName
      *
      * @return Response|null
      */

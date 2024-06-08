@@ -64,11 +64,11 @@ use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 class RegistrationController extends AbstractController
 {
     /**
-     * @param Request $request
+     * @param Request                     $request
      * @param UserPasswordHasherInterface $userPasswordHasher
-     * @param EntityManagerInterface $entityManager
-     * @param UserAuthenticatorInterface $userAuthenticator
-     * @param UserAuthenticator $authenticator
+     * @param EntityManagerInterface      $entityManager
+     * @param UserAuthenticatorInterface  $userAuthenticator
+     * @param UserAuthenticator           $authenticator
      *
      * @return Response
      */
