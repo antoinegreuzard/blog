@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * This file is part of the Blog.
+ *
+ * (c) Antoine Greuzard <antoine@antoinegreuzard.fr>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
@@ -19,6 +28,60 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
+/**
+ * This is the User entity class.
+ *
+ * It implements the UserInterface and PasswordAuthenticatedUserInterface
+ * provided by Symfony, for user's authentication.
+ *
+ * The User has several properties: id, email, roles, password, username,
+ * and posts.
+ *
+ * - The 'id' is an integer, which is automatically generated as the user is
+ * persisted in the database.
+ *   It's primarily used to identify a user in the database and cannot be set
+ * manually.
+ *
+ * - The 'email' is a string that must be a valid email address.
+ * It is used as the user identifier for authentication.
+ *
+ * - The 'roles' is an array of strings containing the roles of the user.
+ * By default, every user has at least the 'ROLE_USER' role.
+ *
+ * - The 'password' is a string that contains the hashed password of the user.
+ *
+ * - The 'username' is a string that represents the user's username. It is used
+ * for displaying purposes.
+ *
+ * - The 'posts' is a Collection of Post entities authored by the user.
+ *   It uses the Doctrine common collections to enable complex array
+ *   manipulations.
+ *
+ * The User entity uses various annotations:
+ *
+ * - The class-level ApiResource annotation is used by the API platform to
+ * determine the available operations for a User.
+ *
+ * - The ORM\Entity annotation tells Doctrine that this class is a Doctrine
+ * entity that can be persisted to the database.
+ *
+ * - The UniqueEntity annotation is used by the Symfony validator to ensure
+ * that no two Users share the same email.
+ *
+ * The operations of the User entity are defined in the ApiResource annotation:
+ *
+ * - The Get method allows retrieving a user by their ID.
+ *
+ * - The GetCollection method allows retrieving a list of all users.
+ *
+ * - The ApiPost method allows creating a new user.
+ *
+ * - The Put method allows updating the details of an existing user.
+ *
+ * - The Delete method allows deleting a user by their ID.
+ *
+ * - The Patch method allows partially updating the details of an existing user.
+ */
 #[ApiResource(
     operations: [
         new Get(
@@ -191,7 +254,10 @@ use Symfony\Component\Validator\Constraints as Assert;
     paginationEnabled: false
 )]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
+#[UniqueEntity(
+    fields: ['email'],
+    message: 'There is already an account with this email'
+)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -229,25 +295,43 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var Collection<int, Post>
      */
-    #[ORM\OneToMany(targetEntity: Post::class, mappedBy: 'author', orphanRemoval: true)]
+    #[ORM\OneToMany(
+        targetEntity: Post::class,
+        mappedBy: 'author',
+        orphanRemoval: true
+    )]
     #[Groups(['user:read'])]
     private Collection $posts;
 
+    /**
+     * __construct
+     */
     public function __construct()
     {
         $this->posts = new ArrayCollection();
     }
 
+    /**
+     * @return int|null
+     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
+    /**
+     * @return string|null
+     */
     public function getEmail(): ?string
     {
         return $this->email;
     }
 
+    /**
+     * @param string $email
+     *
+     * @return $this
+     */
     public function setEmail(string $email): self
     {
         $this->email = $email;
@@ -258,14 +342,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * A visual identifier that represents this user.
      *
+     * @return string
+     *
      * @see UserInterface
      */
     public function getUserIdentifier(): string
     {
-        return (string) $this->email;
+        return (string)$this->email;
     }
 
     /**
+     * @return array
+     *
      * @see UserInterface
      */
     public function getRoles(): array
@@ -290,6 +378,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
+     * @return string
+     *
      * @see PasswordAuthenticatedUserInterface
      */
     public function getPassword(): string
@@ -297,6 +387,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->password;
     }
 
+    /**
+     * @param string $password
+     *
+     * @return $this
+     */
     public function setPassword(string $password): self
     {
         $this->password = $password;
@@ -305,6 +400,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
+     * @return void
+     *
      * @see UserInterface
      */
     public function eraseCredentials(): void
@@ -313,11 +410,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // $this->plainPassword = null;
     }
 
+    /**
+     * @return string|null
+     */
     public function getUsername(): ?string
     {
         return $this->username;
     }
 
+    /**
+     * @param string $username
+     *
+     * @return $this
+     */
     public function setUsername(string $username): self
     {
         $this->username = $username;
@@ -333,6 +438,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->posts;
     }
 
+    /**
+     * @param Post $post
+     *
+     * @return $this
+     */
     public function addPost(Post $post): self
     {
         if (!$this->posts->contains($post)) {
@@ -343,6 +453,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    /**
+     * @param Post $post
+     *
+     * @return $this
+     */
     public function removePost(Post $post): self
     {
         if ($this->posts->removeElement($post)) {

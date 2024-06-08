@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * This file is part of the Blog.
+ *
+ * (c) Antoine Greuzard <antoine@antoinegreuzard.fr>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace App\Repository;
 
 use App\Entity\User;
@@ -21,6 +30,9 @@ use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
  */
 class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface
 {
+    /**
+     * @param ManagerRegistry $registry
+     */
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, User::class);
@@ -28,11 +40,16 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
     /**
      * Used to upgrade (rehash) the user's password automatically over time.
+     *
+     * @param PasswordAuthenticatedUserInterface $user
+     * @param string $newHashedPassword
      */
     public function upgradePassword(PasswordAuthenticatedUserInterface $user, string $newHashedPassword): void
     {
         if (!$user instanceof User) {
-            throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', $user::class));
+            throw new UnsupportedUserException(
+                sprintf('Instances of "%s" are not supported.', $user::class)
+            );
         }
 
         $user->setPassword($newHashedPassword);

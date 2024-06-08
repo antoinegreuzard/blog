@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * This file is part of the Blog.
+ *
+ * (c) Antoine Greuzard <antoine@antoinegreuzard.fr>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
@@ -10,11 +19,64 @@ use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post as ApiPost;
 use ApiPlatform\Metadata\Put;
 use App\Repository\PostRepository;
+use DateTimeImmutable;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
+/**
+ * @class Post
+ * This class represents a Post entity in a blogging application
+ *
+ * It's decorated with #[ApiResource()], #[ORM\Entity()] and
+ * #[ORM\HasLifecycleCallbacks()] attributes on declaration.
+ * The entity is associated with the PostRepository class.
+ *
+ * Attributes:
+ * - id: Primary Key, and it's auto-incremented.
+ * - title: The title of the blog post. It's mandatory and its string length
+ * should fall within 2 to 255 characters.
+ * - content: The main content of the blog post. It's mandatory.
+ * - createdAt: The date and time the blog post was created.
+ * - updatedAt: The date and time the blog post was last updated.
+ * - slug: The URL friendly version of the blog post title. It's mandatory and
+ * unique throughout the Post table.
+ * - category: The category that the blog post belongs to. It's mandatory.
+ * - author: The User entity who created the blog post. It's mandatory.
+ *
+ * Its methods provide functionality to get and set each attribute.
+ * They also manage "prePersist" and "preUpdate" lifecycle callbacks.
+ *
+ * Applied API operations:
+ * - Get:
+ *   Retrieves a single post by its ID.
+ *
+ * - GetCollection:
+ *   Grabs a collection of posts.
+ *
+ * - ApiPost:
+ *   Allows the creation of a new post. This operation requires the ROLE_USER
+ * permission.
+ *
+ * - Put:
+ *   Provides the capability to update an existing post. This operation also
+ * requires the ROLE_USER permission.
+ *
+ * - Delete:
+ *   Enables the deletion of a post by its ID. The operation necessitates the
+ * ROLE_USER role.
+ *
+ * - Patch:
+ *   Provides partially updating an existing post capability. This operation
+ * needs the ROLE_USER permission.
+ *
+ * The fields 'title', 'slug', 'content', 'category' and 'author' are available
+ * for both read and write operations.
+ * The 'id', 'createdAt' & 'updatedAt' are read-only.
+ *
+ * Pagination is disabled for this entity.
+ */
 #[ApiResource(
     operations: [
         new Get(
@@ -259,11 +321,11 @@ class Post
 
     #[ORM\Column]
     #[Groups(['post:read'])]
-    private ?\DateTimeImmutable $createdAt = null;
+    private ?DateTimeImmutable $createdAt = null;
 
     #[ORM\Column]
     #[Groups(['post:read'])]
-    private ?\DateTimeImmutable $updatedAt = null;
+    private ?DateTimeImmutable $updatedAt = null;
 
     #[ORM\Column(length: 255, unique: true)]
     #[Assert\NotBlank]
@@ -280,22 +342,36 @@ class Post
     #[Groups(['post:read', 'post:write'])]
     private ?User $author = null;
 
+    /**
+     * __construct
+     */
     public function __construct()
     {
-        $this->createdAt = new \DateTimeImmutable();
-        $this->updatedAt = new \DateTimeImmutable();
+        $this->createdAt = new DateTimeImmutable();
+        $this->updatedAt = new DateTimeImmutable();
     }
 
+    /**
+     * @return int|null
+     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
+    /**
+     * @return string|null
+     */
     public function getTitle(): ?string
     {
         return $this->title;
     }
 
+    /**
+     * @param string $title
+     *
+     * @return $this
+     */
     public function setTitle(string $title): static
     {
         $this->title = $title;
@@ -303,11 +379,19 @@ class Post
         return $this;
     }
 
+    /**
+     * @return string|null
+     */
     public function getContent(): ?string
     {
         return $this->content;
     }
 
+    /**
+     * @param string $content
+     *
+     * @return $this
+     */
     public function setContent(string $content): static
     {
         $this->content = $content;
@@ -315,35 +399,59 @@ class Post
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    /**
+     * @return DateTimeImmutable|null
+     */
+    public function getCreatedAt(): ?DateTimeImmutable
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $createdAt): static
+    /**
+     * @param DateTimeImmutable $createdAt
+     *
+     * @return $this
+     */
+    public function setCreatedAt(DateTimeImmutable $createdAt): static
     {
         $this->createdAt = $createdAt;
 
         return $this;
     }
 
-    public function getUpdatedAt(): ?\DateTimeImmutable
+    /**
+     * @return DateTimeImmutable|null
+     */
+    public function getUpdatedAt(): ?DateTimeImmutable
     {
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(\DateTimeImmutable $updatedAt): static
+    /**
+     * @param DateTimeImmutable $updatedAt
+     *
+     * @return $this
+     */
+    public function setUpdatedAt(DateTimeImmutable $updatedAt): static
     {
         $this->updatedAt = $updatedAt;
 
         return $this;
     }
 
+    /**
+     * @return string|null
+     */
     public function getSlug(): ?string
     {
         return $this->slug;
     }
 
+    /**
+     * @param string $slug
+     *
+     * @return $this
+     */
     public function setSlug(string $slug): static
     {
         $this->slug = $slug;
@@ -351,11 +459,19 @@ class Post
         return $this;
     }
 
+    /**
+     * @return Category|null
+     */
     public function getCategory(): ?Category
     {
         return $this->category;
     }
 
+    /**
+     * @param Category|null $category
+     *
+     * @return $this
+     */
     public function setCategory(?Category $category): static
     {
         $this->category = $category;
@@ -363,11 +479,19 @@ class Post
         return $this;
     }
 
+    /**
+     * @return User|null
+     */
     public function getAuthor(): ?User
     {
         return $this->author;
     }
 
+    /**
+     * @param User|null $author
+     *
+     * @return $this
+     */
     public function setAuthor(?User $author): static
     {
         $this->author = $author;
@@ -375,21 +499,27 @@ class Post
         return $this;
     }
 
+    /**
+     * @return void
+     */
     #[ORM\PrePersist]
     public function prePersist(): void
     {
         if (null === $this->createdAt) {
-            $this->createdAt = new \DateTimeImmutable();
+            $this->createdAt = new DateTimeImmutable();
         }
 
         if (null === $this->updatedAt) {
-            $this->updatedAt = new \DateTimeImmutable();
+            $this->updatedAt = new DateTimeImmutable();
         }
     }
 
+    /**
+     * @return void
+     */
     #[ORM\PreUpdate]
     public function preUpdate(): void
     {
-        $this->updatedAt = new \DateTimeImmutable();
+        $this->updatedAt = new DateTimeImmutable();
     }
 }

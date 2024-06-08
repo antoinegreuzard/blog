@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * This file is part of the Blog.
+ *
+ * (c) Antoine Greuzard <antoine@antoinegreuzard.fr>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
@@ -16,6 +25,38 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
+/**
+ * The Category PHP class under namespace App\Entity.
+ * Annotated with ORM Entity, it represents the Category entity in the Database.
+ * It also identifies the CategoryRepository class with repositoryClass property
+ * as specific repository for Category Entity.
+ * It also maps the Category entity with '@ApiResource' annotation that
+ * describes how to process it through API Platform.
+ * This annotation defines various operations including GET, POST, PUT, DELETE,
+ * PATCH, enacted on the Category objects through API.
+ * All the operations have their URI Templates and they're associated with
+ * OpenAPI context including summary, descriptions, request body contents and
+ * responses.
+ * For POST, PUT, and PATCH operations, a security access layer is also defined
+ * to permit only User Role to perform these operations.
+ * ApiResource annotation also describes normalizationContext,
+ * denormalizationContext, OpenAPI context with properties schema of Category
+ * entity, and pagination settings.
+ * Class properties: id, name, posts are defined private by default.
+ * PHP DocBlocks are used for main constructors and methods of Category class to
+ * specify return types and parameters.
+ * 'Groups' are applied to properties to include in the normalization and
+ * denormalization process.
+ * The posts property is particularly interesting, as it signifies the OneToMany
+ * relationship with the Post entity.
+ * A constructor method is defined initializing the posts property as an
+ * ArrayCollection.
+ * Getter and Setter methods are also provided for the Category properties
+ * including posts.
+ * AddPost and removePost methods are used to manage the posts collection.
+ * This class provides a comprehensive blueprint to handle Category type objects
+ * within the application environment.
+ */
 #[ApiResource(
     operations: [
         new Get(
@@ -234,21 +275,35 @@ class Category
     #[Groups(['category:read'])]
     private Collection $posts;
 
+    /**
+     * __construct
+     */
     public function __construct()
     {
         $this->posts = new ArrayCollection();
     }
 
+    /**
+     * @return int|null
+     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
+    /**
+     * @return string|null
+     */
     public function getName(): ?string
     {
         return $this->name;
     }
 
+    /**
+     * @param string $name
+     *
+     * @return $this
+     */
     public function setName(string $name): static
     {
         $this->name = $name;
@@ -264,6 +319,11 @@ class Category
         return $this->posts;
     }
 
+    /**
+     * @param Post $post
+     *
+     * @return $this
+     */
     public function addPost(Post $post): static
     {
         if (!$this->posts->contains($post)) {
@@ -274,6 +334,11 @@ class Category
         return $this;
     }
 
+    /**
+     * @param Post $post
+     *
+     * @return $this
+     */
     public function removePost(Post $post): static
     {
         if ($this->posts->removeElement($post)) {

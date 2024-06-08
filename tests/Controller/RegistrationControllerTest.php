@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * This file is part of the Blog.
+ *
+ * (c) Antoine Greuzard <antoine@antoinegreuzard.fr>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace App\Tests\Controller;
 
 use App\Entity\User;
@@ -7,22 +16,25 @@ use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
- * Class RegistrationControllerTest
+ * Class RegistrationControllerTest.
  *
  * This class extends WebTestCase, which provides the functionality for testing
  * HTTP paper_testing_library. It contains tests to validate the behavior of
  * the registration feature in a web application.
  *
  * Properties:
+ *
  * @private  KernelBrowser $client - A client instance used to make requests.
  * @private  ?object $entityManager - An entity manager instance used to
  * interact with the database.
  *
  * Methods:
+ *
  * @protected setUp(): void - This method sets up the test environment,
  * called before execution of each test method.
  * @protected tearDown(): void - This method tears down the test environment,
  * called after execution of each test method.
+ *
  * @public testRegisterPageLoadsCorrectly() - This test ensures that the
  * registration page loads successfully.
  * @public testFormSubmissionWithValidData() - This test ensures that the
