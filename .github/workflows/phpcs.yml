@@ -77,4 +77,6 @@ jobs:
               run: php bin/console cache:clear --env=dev
 
             - name: Run PHP CodeSniffer
-              run: vendor/bin/phpcs
+              run: |
+                vendor/bin/phpcs --config-set installed_paths vendor/escapestudios/symfony2-coding-standard
+                vendor/bin/phpcs
