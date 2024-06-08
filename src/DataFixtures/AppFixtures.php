@@ -27,8 +27,6 @@ use Doctrine\Persistence\ObjectManager;
  * interaction with your database system to store data.
  * This 'load' function takes an ObjectManager as a parameter and
  * don't return a value.
- *
- * @extends \Doctrine\Bundle\FixturesBundle\Fixture
  */
 class AppFixtures extends Fixture
 {

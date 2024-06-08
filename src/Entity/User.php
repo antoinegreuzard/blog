@@ -352,7 +352,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return array
+     * @return string[]
      *
      * @see UserInterface
      */
