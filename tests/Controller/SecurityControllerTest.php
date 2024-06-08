@@ -91,4 +91,3 @@ class SecurityControllerTest extends WebTestCase
         $this->assertEquals('/', $client->getRequest()->getPathInfo());
     }
 }
-    
