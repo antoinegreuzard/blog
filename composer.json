@@ -112,5 +112,8 @@
             "allow-contrib": false,
             "require": "7.0.*"
         }
+    },
+    "require-dev": {
+        "squizlabs/php_codesniffer": "^3.10"
     }
 }
