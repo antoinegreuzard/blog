@@ -2,10 +2,10 @@
 
 namespace App\Tests\Controller;
 
-use App\Repository\UserRepository;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\User;
+use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class SecurityControllerTest extends WebTestCase
 {
@@ -51,7 +51,6 @@ class SecurityControllerTest extends WebTestCase
         ]);
 
         $client->followRedirect();
-
 
         $content = $client->getResponse()->getContent();
 

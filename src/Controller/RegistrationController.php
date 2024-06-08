@@ -4,16 +4,15 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\RegistrationFormType;
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use App\Security\UserAuthenticator;
-use Exception;
-use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 
 class RegistrationController extends AbstractController
 {
@@ -69,7 +68,7 @@ class RegistrationController extends AbstractController
                     );
                 } catch (UniqueConstraintViolationException $e) {
                     $errors[] = 'This email is already registered.';
-                } catch (Exception $e) {
+                } catch (\Exception $e) {
                     $errors[] = 'An unexpected error occurred. Please try again later.';
                     error_log($e->getMessage());
                 }

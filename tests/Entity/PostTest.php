@@ -2,8 +2,8 @@
 
 namespace App\Tests\Entity;
 
-use App\Entity\Post;
 use App\Entity\Category;
+use App\Entity\Post;
 use App\Entity\User;
 use PHPUnit\Framework\TestCase;
 
