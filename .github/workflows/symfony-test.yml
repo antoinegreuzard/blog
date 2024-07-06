@@ -24,17 +24,19 @@ jobs:
               run: |
                   echo 'APP_ENV=prod' >> .env.local
                   echo "APP_SECRET=${{ env.APP_SECRET }}" >> .env.local
-                  echo 'DATABASE_URL="sqlite:///%kernel.project_dir%/var/data/ci_test_database.sqlite"' >> .env.local
+                  echo 'DATABASE_URL="sqlite:///%kernel.project_dir%/var/data_prod.db"' >> .env.local
 
             - name: Create .env.test.local file
               run: |
-                  echo 'DATABASE_URL="sqlite:///%kernel.project_dir%/var/data/ci_test_database_test.sqlite"' >> .env.test.local
+                  echo 'APP_ENV=test' >> .env.test.local
+                  echo "APP_SECRET=${{ env.APP_SECRET }}" >> .env.test.local
+                  echo 'DATABASE_URL="sqlite:///%kernel.project_dir%/var/data_test.db"' >> .env.test.local
 
             - name: Create SQLite databases
               run: |
-                  mkdir -p var/data
-                  touch var/data/ci_test_database.sqlite
-                  touch var/data/ci_test_database_test.sqlite
+                  mkdir -p var
+                  touch var/data_prod.db
+                  touch var/data_test.db
 
             - name: Install dependencies
               run: composer install --prefer-dist --no-progress --no-suggest
