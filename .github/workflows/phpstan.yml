@@ -46,14 +46,9 @@ jobs:
                   echo "APP_SECRET=${{ env.APP_SECRET }}" >> .env.local
                   echo 'DATABASE_URL="mysql://root:root@127.0.0.1:3306/ci_test_database?charset=utf8mb4"' >> .env.local
 
-            - name: Create .env.test.local file
-              run: |
-                echo 'DATABASE_URL="mysql://root:root@127.0.0.1:3306/ci_test_database_test?charset=utf8mb4"' >> .env.test.local
-
             - name: Create databases
               run: |
                   mysql --host=127.0.0.1 --user=root --password=root --execute="CREATE DATABASE IF NOT EXISTS ci_test_database;"
-                  mysql --host=127.0.0.1 --user=root --password=root --execute="CREATE DATABASE IF NOT EXISTS ci_test_database_test;"
 
             - name: Install dependencies
               run: composer install --prefer-dist --no-progress --no-suggest --no-interaction
@@ -63,7 +58,6 @@ jobs:
                   DATABASE_URL: mysql://root:root@127.0.0.1:3306/ci_test_database
               run: php bin/console doctrine:migrations:migrate --env=prod --no-interaction
             
-
             - name: Clear Symfony cache
               run: php bin/console cache:clear --env=dev
 
