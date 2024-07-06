@@ -6,19 +6,6 @@ jobs:
     phpcs:
         runs-on: ubuntu-latest
 
-        services:
-            mysql:
-                image: mysql:5.7
-                env:
-                    MYSQL_ROOT_PASSWORD: root
-                ports:
-                    - 3306:3306
-                options: >-
-                  --health-cmd="mysqladmin ping --silent"
-                  --health-interval=10s
-                  --health-timeout=5s
-                  --health-retries=3
-
         steps:
             - uses: actions/checkout@v4
 
@@ -26,15 +13,7 @@ jobs:
               uses: shivammathur/setup-php@v2
               with:
                   php-version: '8.2'
-                  extensions: mbstring, intl, pdo_mysql
-                  tools: composer
-
-            - name: Wait for MySQL
-              run: |
-                  until mysqladmin ping --host=127.0.0.1 --user=root --password=root --silent; do
-                    echo 'waiting for mysql to be connectable...'
-                    sleep 5
-                  done
+                  extensions: mbstring, intl, pdo_sqlite
 
             - name: Generate APP_SECRET
               id: generate_app_secret
@@ -44,11 +23,12 @@ jobs:
               run: |
                   echo 'APP_ENV=prod' >> .env.local
                   echo "APP_SECRET=${{ env.APP_SECRET }}" >> .env.local
-                  echo 'DATABASE_URL="mysql://root:root@127.0.0.1:3306/ci_test_database?charset=utf8mb4"' >> .env.local
-                  
-            - name: Create databases
+                  echo 'DATABASE_URL="sqlite:///%kernel.project_dir%/var/data_prod.db"' >> .env.local
+
+            - name: Create SQLite databases
               run: |
-                  mysql --host=127.0.0.1 --user=root --password=root --execute="CREATE DATABASE IF NOT EXISTS ci_test_database;"
+                  mkdir -p var
+                  touch var/data_prod.db
 
             - name: Install dependencies
               run: composer install --prefer-dist --no-progress --no-suggest --no-interaction
@@ -56,9 +36,8 @@ jobs:
             - name: Run database migrations for production
               run: php bin/console doctrine:migrations:migrate --env=prod --no-interaction
 
-
             - name: Clear Symfony cache
-              run: php bin/console cache:clear --env=dev
+              run: php bin/console cache:clear --env=prod
 
             - name: Run PHP CodeSniffer
               run: |
