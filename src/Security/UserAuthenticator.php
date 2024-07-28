@@ -80,9 +80,9 @@ class UserAuthenticator extends AbstractLoginFormAuthenticator
     }
 
     /**
-     * @param Request        $request
+     * @param Request $request
      * @param TokenInterface $token
-     * @param string         $firewallName
+     * @param string $firewallName
      *
      * @return Response|null
      */
@@ -100,7 +100,7 @@ class UserAuthenticator extends AbstractLoginFormAuthenticator
      *
      * @return string
      */
-    protected function getLoginUrl(Request $request): string
+    public function getLoginUrl(Request $request): string
     {
         return $this->urlGenerator->generate(self::LOGIN_ROUTE);
     }
