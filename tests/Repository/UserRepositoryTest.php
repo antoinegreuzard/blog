@@ -166,7 +166,7 @@ class UserRepositoryTest extends KernelTestCase
         $this->expectException(UnsupportedUserException::class);
 
         $unsupportedUser = $this->createMock(PasswordAuthenticatedUserInterface::class);
-        $this->userRepository->upgradePassword($unsupportedUser, 'new_hashed_password');
+        $this->userRepository->upgradePassword($unsupportedUser, 'NewSecurePass789!');
     }
 
     /**
