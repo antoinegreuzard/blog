@@ -100,7 +100,7 @@ class UserAuthenticator extends AbstractLoginFormAuthenticator
      *
      * @return string
      */
-    protected function getLoginUrl(Request $request): string
+    public function getLoginUrl(Request $request): string
     {
         return $this->urlGenerator->generate(self::LOGIN_ROUTE);
     }

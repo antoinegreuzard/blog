@@ -50,11 +50,5 @@ jobs:
             - name: Clear cache for test
               run: php bin/console cache:clear --env=test
 
-            - name: Run tests Entity
-              run: ./bin/phpunit tests/Entity
-
-            - name: Run tests Form
-              run: ./bin/phpunit tests/Form
-
-            - name: Run tests Controller
-              run: ./bin/phpunit tests/Controller
+            - name: Run tests
+              run: ./bin/phpunit
