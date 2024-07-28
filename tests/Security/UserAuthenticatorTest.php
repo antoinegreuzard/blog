@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * This file is part of the Blog.
+ *
+ * (c) Antoine Greuzard <antoine@antoinegreuzard.fr>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace App\Tests\Security;
 
 use App\Security\UserAuthenticator;
@@ -14,17 +23,43 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordCredentials;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 
+/**
+ * Class UserAuthenticatorTest
+ *
+ * Cette classe contient les tests unitaires pour la classe `UserAuthenticator`.
+ * Elle utilise PHPUnit pour vérifier les fonctionnalités liées à l'authentification des utilisateurs.
+ */
 class UserAuthenticatorTest extends TestCase
 {
+    /**
+     * @var UserAuthenticator $authenticator
+     * L'authentificateur utilisateur à tester.
+     */
     private UserAuthenticator $authenticator;
+
+    /**
+     * @var UrlGeneratorInterface $urlGenerator
+     * Générateur d'URL pour les redirections après l'authentification.
+     */
     private UrlGeneratorInterface $urlGenerator;
 
+    /**
+     * setUp
+     *
+     * Méthode exécutée avant chaque test. Elle initialise l'authentificateur et le générateur d'URL.
+     */
     protected function setUp(): void
     {
         $this->urlGenerator = $this->createMock(UrlGeneratorInterface::class);
         $this->authenticator = new UserAuthenticator($this->urlGenerator);
     }
 
+    /**
+     * testSupports
+     *
+     * Teste la méthode `supports` pour vérifier si la requête est supportée pour l'authentification.
+     * Vérifie que la méthode retourne true pour une requête POST sur la route 'app_login', et false autrement.
+     */
     public function testSupports(): void
     {
         $request = new Request([], [], ['_route' => 'app_login']);
@@ -36,6 +71,12 @@ class UserAuthenticatorTest extends TestCase
         $this->assertFalse($this->authenticator->supports($request));
     }
 
+    /**
+     * testAuthenticate
+     *
+     * Teste la méthode `authenticate` pour s'assurer qu'un `Passport` est correctement créé avec les badges appropriés.
+     * Mocke une session et passe les données de connexion dans la requête.
+     */
     public function testAuthenticate(): void
     {
         // Mock de la session
@@ -60,7 +101,12 @@ class UserAuthenticatorTest extends TestCase
         $this->assertInstanceOf(RememberMeBadge::class, $passport->getBadge(RememberMeBadge::class));
     }
 
-
+    /**
+     * testOnAuthenticationSuccess
+     *
+     * Teste la méthode `onAuthenticationSuccess` pour s'assurer qu'une redirection appropriée est effectuée après une authentification réussie.
+     * Mocke la session et vérifie la redirection vers la page d'accueil.
+     */
     public function testOnAuthenticationSuccess(): void
     {
         $request = new Request();
@@ -78,6 +124,12 @@ class UserAuthenticatorTest extends TestCase
         $this->assertEquals('/home', $response->getTargetUrl());
     }
 
+    /**
+     * testGetLoginUrl
+     *
+     * Teste la méthode `getLoginUrl` pour s'assurer que l'URL de la page de connexion est générée correctement.
+     * Vérifie que l'URL générée est '/login'.
+     */
     public function testGetLoginUrl(): void
     {
         $request = new Request();
