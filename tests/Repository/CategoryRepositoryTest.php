@@ -47,6 +47,9 @@ class CategoryRepositoryTest extends KernelTestCase
             ->get('doctrine')
             ->getManager();
         $this->categoryRepository = $this->entityManager->getRepository(Category::class);
+
+        // Préparer les données de test
+        $this->loadTestData();
     }
 
     /**
@@ -111,5 +114,19 @@ class CategoryRepositoryTest extends KernelTestCase
         parent::tearDown();
         $this->entityManager->close();
         $this->entityManager = null; // éviter les fuites de mémoire
+    }
+
+    /**
+     * loadTestData
+     *
+     * Charge les données de test dans la base de données avant chaque test.
+     * Ici, une catégorie 'Tech' est créée et persistée.
+     */
+    private function loadTestData(): void
+    {
+        $category = new Category();
+        $category->setName('Tech');
+        $this->entityManager->persist($category);
+        $this->entityManager->flush();
     }
 }
