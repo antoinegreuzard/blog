@@ -143,7 +143,7 @@ class UserRepositoryTest extends KernelTestCase
     {
         $user = new User();
         $user->setEmail('test@example.com');
-        $user->setPassword('old_password');
+        $user->setPassword('OldSecurePass456!');
         $user->setUsername('testuser');
 
         $this->entityManager->persist($user);
