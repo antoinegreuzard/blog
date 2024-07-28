@@ -50,7 +50,7 @@ This is a Symfony project implementing a basic web application with user registr
     php bin/console lexik:jwt:generate-keypair
     ```
 
-    ou
+    or
    
     ```sh
     mkdir -p config/jwt
@@ -77,7 +77,7 @@ This is a Symfony project implementing a basic web application with user registr
     symfony server:start
     ```
 
-    ou
+    or
 
     ```sh
     php -S localhost:8000 -t public
