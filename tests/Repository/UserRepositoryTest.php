@@ -149,7 +149,7 @@ class UserRepositoryTest extends KernelTestCase
         $this->entityManager->persist($user);
         $this->entityManager->flush();
 
-        $newHashedPassword = 'new_hashed_password';
+        $newHashedPassword = 'NewSecurePass789!';
         $this->userRepository->upgradePassword($user, $newHashedPassword);
 
         $this->assertEquals($newHashedPassword, $user->getPassword());
