@@ -37,6 +37,7 @@ class UserRepositoryTest extends KernelTestCase
      */
     private UserRepository $userRepository;
 
+
     /**
      * setUp
      *
@@ -61,7 +62,7 @@ class UserRepositoryTest extends KernelTestCase
     {
         $user = new User();
         $user->setEmail('user@example.com');
-        $user->setPassword('password123');
+        $user->setPassword('SecurePass123!');
         $user->setUsername('username1');
         $this->entityManager->persist($user);
         $this->entityManager->flush();
@@ -80,7 +81,7 @@ class UserRepositoryTest extends KernelTestCase
     {
         $user = new User();
         $user->setEmail('user@example.com');
-        $user->setPassword('password123');
+        $user->setPassword('SecurePass123!');
         $user->setUsername('username2');
         $this->entityManager->persist($user);
         $this->entityManager->flush();
@@ -100,7 +101,7 @@ class UserRepositoryTest extends KernelTestCase
     {
         $user = new User();
         $user->setEmail('user@example.com');
-        $user->setPassword('password123');
+        $user->setPassword('SecurePass123!');
         $user->setUsername('username3');
         $this->entityManager->persist($user);
         $this->entityManager->flush();
@@ -121,7 +122,7 @@ class UserRepositoryTest extends KernelTestCase
     {
         $user = new User();
         $user->setEmail('user@example.com');
-        $user->setPassword('password123');
+        $user->setPassword('SecurePass123!');
         $user->setUsername('username4');
         $this->entityManager->persist($user);
         $this->entityManager->flush();
