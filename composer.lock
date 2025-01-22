@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fe365b6570c7f6d7b984c33df8917bb3",
+    "content-hash": "17f33b815fe4b9a3d491d7f696b502b3",
     "packages": [
         {
             "name": "api-platform/core",
@@ -4791,20 +4791,21 @@
         },
         {
             "name": "symfony/form",
-            "version": "v7.0.8",
+            "version": "v7.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/form.git",
-                "reference": "1d0128e2f7e80c346ec51fa4d1ce4fec0d435eeb"
+                "reference": "264cff30f52f12149aff92bbc23e78160a45c2f3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/form/zipball/1d0128e2f7e80c346ec51fa4d1ce4fec0d435eeb",
-                "reference": "1d0128e2f7e80c346ec51fa4d1ce4fec0d435eeb",
+                "url": "https://api.github.com/repos/symfony/form/zipball/264cff30f52f12149aff92bbc23e78160a45c2f3",
+                "reference": "264cff30f52f12149aff92bbc23e78160a45c2f3",
                 "shasum": ""
             },
             "require": {
                 "php": ">=8.2",
+                "symfony/deprecation-contracts": "^2.5|^3",
                 "symfony/event-dispatcher": "^6.4|^7.0",
                 "symfony/options-resolver": "^6.4|^7.0",
                 "symfony/polyfill-ctype": "~1.8",
@@ -4867,7 +4868,7 @@
             "description": "Allows to easily create, process and reuse HTML forms",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/form/tree/v7.0.8"
+                "source": "https://github.com/symfony/form/tree/v7.2.0"
             },
             "funding": [
                 {
@@ -4883,7 +4884,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-05-31T14:55:39+00:00"
+            "time": "2024-11-27T11:55:00+00:00"
         },
         {
             "name": "symfony/framework-bundle",
@@ -6285,8 +6286,8 @@
             "type": "library",
             "extra": {
                 "thanks": {
-                    "name": "symfony/polyfill",
-                    "url": "https://github.com/symfony/polyfill"
+                    "url": "https://github.com/symfony/polyfill",
+                    "name": "symfony/polyfill"
                 }
             },
             "autoload": {
