@@ -28,7 +28,7 @@
         "symfony/console": "7.0.*",
         "symfony/css-selector": "7.0.*",
         "symfony/debug-bundle": "7.0.*",
-        "symfony/doctrine-bridge": "7.0.*",
+        "symfony/doctrine-bridge": "7.2.2",
         "symfony/doctrine-messenger": "7.0.*",
         "symfony/dotenv": "7.0.*",
         "symfony/expression-language": "7.0.*",
