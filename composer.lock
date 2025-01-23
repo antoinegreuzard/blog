@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bf4857d379c00b4669995ad69f8b5c7b",
+    "content-hash": "964ef8e2b39c919f315c7919642063a8",
     "packages": [
         {
             "name": "api-platform/core",
@@ -8588,16 +8588,16 @@
         },
         {
             "name": "symfony/web-link",
-            "version": "v7.0.8",
+            "version": "v7.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/web-link.git",
-                "reference": "270f39e3d1c7cc62b5a931fd6e9f2ea4e99ee9cf"
+                "reference": "f537556a885e14a1d28f6c759d41e57e93d0a532"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/web-link/zipball/270f39e3d1c7cc62b5a931fd6e9f2ea4e99ee9cf",
-                "reference": "270f39e3d1c7cc62b5a931fd6e9f2ea4e99ee9cf",
+                "url": "https://api.github.com/repos/symfony/web-link/zipball/f537556a885e14a1d28f6c759d41e57e93d0a532",
+                "reference": "f537556a885e14a1d28f6c759d41e57e93d0a532",
                 "shasum": ""
             },
             "require": {
@@ -8651,7 +8651,7 @@
                 "push"
             ],
             "support": {
-                "source": "https://github.com/symfony/web-link/tree/v7.0.8"
+                "source": "https://github.com/symfony/web-link/tree/v7.2.0"
             },
             "funding": [
                 {
@@ -8667,7 +8667,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-05-31T14:55:39+00:00"
+            "time": "2024-09-25T14:21:43+00:00"
         },
         {
             "name": "symfony/web-profiler-bundle",
