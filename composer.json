@@ -44,7 +44,7 @@
         "symfony/phpunit-bridge": "^7.0",
         "symfony/process": "7.2.0",
         "symfony/property-access": "7.2.0",
-        "symfony/property-info": "7.0.*",
+        "symfony/property-info": "7.2.2",
         "symfony/runtime": "7.1.7",
         "symfony/security-bundle": "7.0.*",
         "symfony/serializer": "7.2.0",
