@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "964ef8e2b39c919f315c7919642063a8",
+    "content-hash": "73fbc3eb18b3cc329bf8032f51bc09c2",
     "packages": [
         {
             "name": "api-platform/core",
@@ -5918,16 +5918,16 @@
         },
         {
             "name": "symfony/notifier",
-            "version": "v7.0.9",
+            "version": "v7.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/notifier.git",
-                "reference": "1fcd4abbb5a9af4c0cd6ad02f716a708d30864c5"
+                "reference": "b5104341c0b0d78fe2cfc8a7a0a185d544ee5c1c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/notifier/zipball/1fcd4abbb5a9af4c0cd6ad02f716a708d30864c5",
-                "reference": "1fcd4abbb5a9af4c0cd6ad02f716a708d30864c5",
+                "url": "https://api.github.com/repos/symfony/notifier/zipball/b5104341c0b0d78fe2cfc8a7a0a185d544ee5c1c",
+                "reference": "b5104341c0b0d78fe2cfc8a7a0a185d544ee5c1c",
                 "shasum": ""
             },
             "require": {
@@ -5976,7 +5976,7 @@
                 "notifier"
             ],
             "support": {
-                "source": "https://github.com/symfony/notifier/tree/v7.0.9"
+                "source": "https://github.com/symfony/notifier/tree/v7.2.0"
             },
             "funding": [
                 {
@@ -5992,7 +5992,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-06-28T07:59:17+00:00"
+            "time": "2024-11-15T13:52:25+00:00"
         },
         {
             "name": "symfony/options-resolver",
