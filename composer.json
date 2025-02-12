@@ -54,7 +54,7 @@
         "symfony/translation": "7.2.2",
         "symfony/twig-bundle": "7.2.0",
         "symfony/ux-turbo": "^2.14",
-        "symfony/validator": "7.2.2",
+        "symfony/validator": "7.2.3",
         "symfony/web-link": "7.2.0",
         "symfony/web-profiler-bundle": "7.0.*",
         "symfony/yaml": "7.2.3",
