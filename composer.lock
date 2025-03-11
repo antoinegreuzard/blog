@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "920ce56a6b7eab071f374242ebab23e1",
+    "content-hash": "cf0c7395a978f27735d4907d4e6773f8",
     "packages": [
         {
             "name": "api-platform/core",
@@ -8712,16 +8712,16 @@
         },
         {
             "name": "symfony/web-profiler-bundle",
-            "version": "v7.2.3",
+            "version": "v7.2.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/web-profiler-bundle.git",
-                "reference": "cd60cb3664954a1593872f6f199bffac99e8c11e"
+                "reference": "4ffde1c860a100533b02697d9aaf5f45759ec26a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/web-profiler-bundle/zipball/cd60cb3664954a1593872f6f199bffac99e8c11e",
-                "reference": "cd60cb3664954a1593872f6f199bffac99e8c11e",
+                "url": "https://api.github.com/repos/symfony/web-profiler-bundle/zipball/4ffde1c860a100533b02697d9aaf5f45759ec26a",
+                "reference": "4ffde1c860a100533b02697d9aaf5f45759ec26a",
                 "shasum": ""
             },
             "require": {
@@ -8774,7 +8774,7 @@
                 "dev"
             ],
             "support": {
-                "source": "https://github.com/symfony/web-profiler-bundle/tree/v7.2.3"
+                "source": "https://github.com/symfony/web-profiler-bundle/tree/v7.2.4"
             },
             "funding": [
                 {
@@ -8790,7 +8790,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-01-07T09:39:55+00:00"
+            "time": "2025-02-14T14:27:24+00:00"
         },
         {
             "name": "symfony/yaml",
