@@ -38,7 +38,7 @@
         "symfony/http-client": "7.2.3",
         "symfony/intl": "7.0.*",
         "symfony/mailer": "7.2.3",
-        "symfony/mime": "7.2.3",
+        "symfony/mime": "7.2.4",
         "symfony/monolog-bundle": "^3.0",
         "symfony/notifier": "7.2.0",
         "symfony/phpunit-bridge": "^7.0",
