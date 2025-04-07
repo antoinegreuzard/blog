@@ -47,7 +47,7 @@ class UserRepositoryTest extends KernelTestCase
     public function testFind(): void
     {
         $user = new User();
-        $user->setEmail(uniqid('user_', true) . '@example.com');
+        $user->setEmail(uniqid('user_', true).'@example.com');
         $user->setPassword('SecurePass123!');
         $user->setUsername('username1');
         $this->entityManager->persist($user);
@@ -65,17 +65,19 @@ class UserRepositoryTest extends KernelTestCase
      */
     public function testFindOneBy(): void
     {
+        $email = uniqid('user_', true).'@example.com';
+
         $user = new User();
-        $user->setEmail(uniqid('user_', true) . '@example.com');
+        $user->setEmail($email);
         $user->setPassword('SecurePass123!');
         $user->setUsername('username2');
         $this->entityManager->persist($user);
         $this->entityManager->flush();
 
-        $foundUser = $this->userRepository->findOneBy(
-            ['email' => 'user@example.com']
-        );
+        $foundUser = $this->userRepository->findOneBy(['email' => $email]);
+
         $this->assertInstanceOf(User::class, $foundUser);
+        $this->assertSame($email, $foundUser->getEmail());
     }
 
     /**
@@ -88,7 +90,7 @@ class UserRepositoryTest extends KernelTestCase
     public function testFindAll(): void
     {
         $user = new User();
-        $user->setEmail(uniqid('user_', true) . '@example.com');
+        $user->setEmail(uniqid('user_', true).'@example.com');
         $user->setPassword('SecurePass123!');
         $user->setUsername('username3');
         $this->entityManager->persist($user);
@@ -108,17 +110,21 @@ class UserRepositoryTest extends KernelTestCase
      */
     public function testFindBy(): void
     {
+        $email = uniqid('user_', true).'@example.com';
+
         $user = new User();
-        $user->setEmail(uniqid('user_', true) . '@example.com');
+        $user->setEmail($email);
         $user->setPassword('SecurePass123!');
         $user->setUsername('username4');
         $this->entityManager->persist($user);
         $this->entityManager->flush();
 
-        $users = $this->userRepository->findBy(['email' => 'user@example.com']);
+        $users = $this->userRepository->findBy(['email' => $email]);
+
         $this->assertIsArray($users);
         $this->assertNotEmpty($users);
         $this->assertInstanceOf(User::class, $users[0]);
+        $this->assertSame($email, $users[0]->getEmail());
     }
 
     /**
@@ -130,7 +136,7 @@ class UserRepositoryTest extends KernelTestCase
     public function testUpgradePassword(): void
     {
         $user = new User();
-        $user->setEmail(uniqid('user_', true) . '@example.com');
+        $user->setEmail(uniqid('user_', true).'@example.com');
         $user->setPassword('OldSecurePass456!');
         $user->setUsername('testuser');
 
