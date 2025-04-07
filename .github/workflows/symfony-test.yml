@@ -10,17 +10,10 @@ jobs:
             -   name: Checkout code
                 uses: actions/checkout@v4
 
-<<<<<<< HEAD
             -   name: Set up PHP
                 uses: shivammathur/setup-php@v2
                 with:
                     extensions: mbstring, intl, pdo_sqlite
-=======
-            - name: Set up PHP
-              uses: shivammathur/setup-php@v2
-              with:
-                  extensions: mbstring, intl, pdo_sqlite
->>>>>>> 0d29f33 (composer update for php 8.4)
 
             -   name: Generate APP_SECRET
                 id: generate_app_secret
@@ -57,4 +50,4 @@ jobs:
                 run: php bin/console cache:clear --env=test
 
             -   name: Run tests
-                run: ./vendor/bin/simple-phpunit
+                run: php bin/phpunit
