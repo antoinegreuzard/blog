@@ -9,12 +9,13 @@
  * with this source code in the file LICENSE.
  */
 
-namespace App\Tests\Repository;
+namespace Repository;
 
-use App\Entity\Post;
 use App\Entity\Category;
+use App\Entity\Post;
 use App\Entity\User;
 use App\Repository\PostRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 /**
@@ -26,7 +27,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 class PostRepositoryTest extends KernelTestCase
 {
     /**
-     * @var \Doctrine\ORM\EntityManagerInterface $entityManager
+     * @var EntityManagerInterface $entityManager
      * Le gestionnaire d'entité utilisé pour interagir avec la base de données de test.
      */
     private $entityManager;
@@ -36,20 +37,6 @@ class PostRepositoryTest extends KernelTestCase
      * Le repository pour l'entité Post utilisé pour tester les opérations de récupération de données.
      */
     private PostRepository $postRepository;
-
-    /**
-     * setUp
-     *
-     * Méthode exécutée avant chaque test. Elle initialise le gestionnaire d'entité et le repository.
-     */
-    protected function setUp(): void
-    {
-        $kernel = self::bootKernel();
-        $this->entityManager = $kernel->getContainer()
-            ->get('doctrine')
-            ->getManager();
-        $this->postRepository = $this->entityManager->getRepository(Post::class);
-    }
 
     /**
      * testFind
@@ -64,7 +51,7 @@ class PostRepositoryTest extends KernelTestCase
         $this->entityManager->persist($category);
 
         $user = new User();
-        $user->setEmail('user@example.com');
+        $user->setEmail(uniqid('user_', true) . '@example.com');
         $user->setPassword('password123');
         $user->setUsername('username');
         $this->entityManager->persist($user);
@@ -72,7 +59,7 @@ class PostRepositoryTest extends KernelTestCase
         $post = new Post();
         $post->setTitle('Sample Post');
         $post->setContent('This is a sample post.');
-        $post->setSlug('sample-post');
+        $post->setSlug(uniqid('sample-post_', true));
         $post->setCategory($category);
         $post->setAuthor($user);
         $this->entityManager->persist($post);
@@ -95,7 +82,7 @@ class PostRepositoryTest extends KernelTestCase
         $this->entityManager->persist($category);
 
         $user = new User();
-        $user->setEmail('user@example.com');
+        $user->setEmail(uniqid('user_', true) . '@example.com');
         $user->setPassword('password123');
         $user->setUsername('username');
         $this->entityManager->persist($user);
@@ -103,7 +90,7 @@ class PostRepositoryTest extends KernelTestCase
         $post = new Post();
         $post->setTitle('Sample Post');
         $post->setContent('This is a sample post.');
-        $post->setSlug('sample-post');
+        $post->setSlug(uniqid('sample-post_', true));
         $post->setCategory($category);
         $post->setAuthor($user);
         $this->entityManager->persist($post);
@@ -128,7 +115,7 @@ class PostRepositoryTest extends KernelTestCase
         $this->entityManager->persist($category);
 
         $user = new User();
-        $user->setEmail('user@example.com');
+        $user->setEmail(uniqid('user_', true) . '@example.com');
         $user->setPassword('password123');
         $user->setUsername('username');
         $this->entityManager->persist($user);
@@ -136,7 +123,7 @@ class PostRepositoryTest extends KernelTestCase
         $post = new Post();
         $post->setTitle('Sample Post');
         $post->setContent('This is a sample post.');
-        $post->setSlug('sample-post');
+        $post->setSlug(uniqid('sample-post_', true));
         $post->setCategory($category);
         $post->setAuthor($user);
         $this->entityManager->persist($post);
@@ -161,7 +148,7 @@ class PostRepositoryTest extends KernelTestCase
         $this->entityManager->persist($category);
 
         $user = new User();
-        $user->setEmail('user@example.com');
+        $user->setEmail(uniqid('user_', true) . '@example.com');
         $user->setPassword('password123');
         $user->setUsername('username');
         $this->entityManager->persist($user);
@@ -169,16 +156,34 @@ class PostRepositoryTest extends KernelTestCase
         $post = new Post();
         $post->setTitle('Tech Post');
         $post->setContent('This is a post about technology.');
-        $post->setSlug('tech-post');
+        $post->setSlug(uniqid('tech-post_', true));
         $post->setCategory($category);
         $post->setAuthor($user);
         $this->entityManager->persist($post);
         $this->entityManager->flush();
 
-        $posts = $this->postRepository->findBy(['category' => $category->getId()]);
+        $posts = $this->postRepository->findBy(
+            ['category' => $category->getId()]
+        );
         $this->assertIsArray($posts);
         $this->assertNotEmpty($posts);
         $this->assertInstanceOf(Post::class, $posts[0]);
+    }
+
+    /**
+     * setUp
+     *
+     * Méthode exécutée avant chaque test. Elle initialise le gestionnaire d'entité et le repository.
+     */
+    protected function setUp(): void
+    {
+        $kernel = self::bootKernel();
+        $this->entityManager = $kernel->getContainer()
+            ->get('doctrine')
+            ->getManager();
+        $this->postRepository = $this->entityManager->getRepository(
+            Post::class
+        );
     }
 
     /**

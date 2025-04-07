@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace App\Tests\Form;
+namespace Form;
 
 use App\Entity\User;
 use App\Form\RegistrationFormType;

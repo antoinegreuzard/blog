@@ -9,12 +9,13 @@
  * with this source code in the file LICENSE.
  */
 
-namespace App\Tests\Security;
+namespace Security;
 
 use App\Security\UserAuthenticator;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\CsrfTokenBadge;
@@ -44,17 +45,6 @@ class UserAuthenticatorTest extends TestCase
     private UrlGeneratorInterface $urlGenerator;
 
     /**
-     * setUp
-     *
-     * Méthode exécutée avant chaque test. Elle initialise l'authentificateur et le générateur d'URL.
-     */
-    protected function setUp(): void
-    {
-        $this->urlGenerator = $this->createMock(UrlGeneratorInterface::class);
-        $this->authenticator = new UserAuthenticator($this->urlGenerator);
-    }
-
-    /**
      * testSupports
      *
      * Teste la méthode `supports` pour vérifier si la requête est supportée pour l'authentification.
@@ -80,7 +70,9 @@ class UserAuthenticatorTest extends TestCase
     public function testAuthenticate(): void
     {
         // Mock de la session
-        $session = $this->createMock(\Symfony\Component\HttpFoundation\Session\SessionInterface::class);
+        $session = $this->createMock(
+            SessionInterface::class
+        );
 
         // Définir la session sur la requête
         $request = new Request([], [
@@ -95,10 +87,22 @@ class UserAuthenticatorTest extends TestCase
 
         // Vérifiez que le Passport est bien créé et contient les informations correctes
         $this->assertInstanceOf(Passport::class, $passport);
-        $this->assertEquals('user@example.com', $passport->getBadge(UserBadge::class)->getUserIdentifier());
-        $this->assertEquals('password123', $passport->getBadge(PasswordCredentials::class)->getPassword());
-        $this->assertInstanceOf(CsrfTokenBadge::class, $passport->getBadge(CsrfTokenBadge::class));
-        $this->assertInstanceOf(RememberMeBadge::class, $passport->getBadge(RememberMeBadge::class));
+        $this->assertEquals(
+            'user@example.com',
+            $passport->getBadge(UserBadge::class)->getUserIdentifier()
+        );
+        $this->assertEquals(
+            'password123',
+            $passport->getBadge(PasswordCredentials::class)->getPassword()
+        );
+        $this->assertInstanceOf(
+            CsrfTokenBadge::class,
+            $passport->getBadge(CsrfTokenBadge::class)
+        );
+        $this->assertInstanceOf(
+            RememberMeBadge::class,
+            $passport->getBadge(RememberMeBadge::class)
+        );
     }
 
     /**
@@ -110,7 +114,11 @@ class UserAuthenticatorTest extends TestCase
     public function testOnAuthenticationSuccess(): void
     {
         $request = new Request();
-        $request->setSession($this->createMock(\Symfony\Component\HttpFoundation\Session\SessionInterface::class));
+        $request->setSession(
+            $this->createMock(
+                SessionInterface::class
+            )
+        );
         $token = $this->createMock(TokenInterface::class);
 
         $this->urlGenerator->expects($this->once())
@@ -118,7 +126,11 @@ class UserAuthenticatorTest extends TestCase
             ->with('home')
             ->willReturn('/home');
 
-        $response = $this->authenticator->onAuthenticationSuccess($request, $token, 'main');
+        $response = $this->authenticator->onAuthenticationSuccess(
+            $request,
+            $token,
+            'main'
+        );
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
         $this->assertEquals('/home', $response->getTargetUrl());
@@ -142,5 +154,16 @@ class UserAuthenticatorTest extends TestCase
         $loginUrl = $this->authenticator->getLoginUrl($request);
 
         $this->assertEquals('/login', $loginUrl);
+    }
+
+    /**
+     * setUp
+     *
+     * Méthode exécutée avant chaque test. Elle initialise l'authentificateur et le générateur d'URL.
+     */
+    protected function setUp(): void
+    {
+        $this->urlGenerator = $this->createMock(UrlGeneratorInterface::class);
+        $this->authenticator = new UserAuthenticator($this->urlGenerator);
     }
 }
