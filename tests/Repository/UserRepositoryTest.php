@@ -47,7 +47,7 @@ class UserRepositoryTest extends KernelTestCase
     public function testFind(): void
     {
         $user = new User();
-        $user->setEmail(uniqid('user_', true).'@example.com');
+        $user->setEmail(uniqid('user_', true) . '@example.com');
         $user->setPassword('SecurePass123!');
         $user->setUsername('username1');
         $this->entityManager->persist($user);
@@ -66,7 +66,7 @@ class UserRepositoryTest extends KernelTestCase
     public function testFindOneBy(): void
     {
         $user = new User();
-        $user->setEmail(uniqid('user_', true).'@example.com');
+        $user->setEmail(uniqid('user_', true) . '@example.com');
         $user->setPassword('SecurePass123!');
         $user->setUsername('username2');
         $this->entityManager->persist($user);
@@ -88,7 +88,7 @@ class UserRepositoryTest extends KernelTestCase
     public function testFindAll(): void
     {
         $user = new User();
-        $user->setEmail(uniqid('user_', true).'@example.com');
+        $user->setEmail(uniqid('user_', true) . '@example.com');
         $user->setPassword('SecurePass123!');
         $user->setUsername('username3');
         $this->entityManager->persist($user);
@@ -109,7 +109,7 @@ class UserRepositoryTest extends KernelTestCase
     public function testFindBy(): void
     {
         $user = new User();
-        $user->setEmail(uniqid('user_', true).'@example.com');
+        $user->setEmail(uniqid('user_', true) . '@example.com');
         $user->setPassword('SecurePass123!');
         $user->setUsername('username4');
         $this->entityManager->persist($user);
@@ -130,7 +130,7 @@ class UserRepositoryTest extends KernelTestCase
     public function testUpgradePassword(): void
     {
         $user = new User();
-        $user->setEmail(uniqid('user_', true).'@example.com');
+        $user->setEmail(uniqid('user_', true) . '@example.com');
         $user->setPassword('OldSecurePass456!');
         $user->setUsername('testuser');
 

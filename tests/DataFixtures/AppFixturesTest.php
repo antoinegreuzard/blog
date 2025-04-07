@@ -13,7 +13,6 @@ namespace DataFixtures;
 
 use App\DataFixtures\AppFixtures;
 use Doctrine\Persistence\ObjectManager;
-use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -37,8 +36,7 @@ class AppFixturesTest extends TestCase
 
         // Configure le mock pour attendre la méthode persist.
         $objectManager->expects($this->any())
-            ->method('persist')
-            ->will(Stub::returnValue(null));
+            ->method('persist');
 
         // Configure le mock pour attendre la méthode flush.
         $objectManager->expects($this->once())

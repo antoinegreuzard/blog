@@ -51,7 +51,7 @@ class PostRepositoryTest extends KernelTestCase
         $this->entityManager->persist($category);
 
         $user = new User();
-        $user->setEmail(uniqid('user_', true).'@example.com');
+        $user->setEmail(uniqid('user_', true) . '@example.com');
         $user->setPassword('password123');
         $user->setUsername('username');
         $this->entityManager->persist($user);
@@ -59,7 +59,7 @@ class PostRepositoryTest extends KernelTestCase
         $post = new Post();
         $post->setTitle('Sample Post');
         $post->setContent('This is a sample post.');
-        $post->setSlug('sample-post');
+        $post->setSlug(uniqid('sample-post_', true));
         $post->setCategory($category);
         $post->setAuthor($user);
         $this->entityManager->persist($post);
@@ -82,7 +82,7 @@ class PostRepositoryTest extends KernelTestCase
         $this->entityManager->persist($category);
 
         $user = new User();
-        $user->setEmail(uniqid('user_', true).'@example.com');
+        $user->setEmail(uniqid('user_', true) . '@example.com');
         $user->setPassword('password123');
         $user->setUsername('username');
         $this->entityManager->persist($user);
@@ -90,14 +90,13 @@ class PostRepositoryTest extends KernelTestCase
         $post = new Post();
         $post->setTitle('Sample Post');
         $post->setContent('This is a sample post.');
-        $post->setSlug('sample-post');
+        $post->setSlug(uniqid('sample-post_', true));
         $post->setCategory($category);
         $post->setAuthor($user);
         $this->entityManager->persist($post);
         $this->entityManager->flush();
 
-        $foundPost = $this->postRepository->findOneBy(['title' => 'Sample Post']
-        );
+        $foundPost = $this->postRepository->findOneBy(['title' => 'Sample Post']);
         $this->assertInstanceOf(Post::class, $foundPost);
         $this->assertEquals('Sample Post', $foundPost->getTitle());
     }
@@ -116,7 +115,7 @@ class PostRepositoryTest extends KernelTestCase
         $this->entityManager->persist($category);
 
         $user = new User();
-        $user->setEmail(uniqid('user_', true).'@example.com');
+        $user->setEmail(uniqid('user_', true) . '@example.com');
         $user->setPassword('password123');
         $user->setUsername('username');
         $this->entityManager->persist($user);
@@ -124,7 +123,7 @@ class PostRepositoryTest extends KernelTestCase
         $post = new Post();
         $post->setTitle('Sample Post');
         $post->setContent('This is a sample post.');
-        $post->setSlug('sample-post');
+        $post->setSlug(uniqid('sample-post_', true));
         $post->setCategory($category);
         $post->setAuthor($user);
         $this->entityManager->persist($post);
@@ -149,7 +148,7 @@ class PostRepositoryTest extends KernelTestCase
         $this->entityManager->persist($category);
 
         $user = new User();
-        $user->setEmail(uniqid('user_', true).'@example.com');
+        $user->setEmail(uniqid('user_', true) . '@example.com');
         $user->setPassword('password123');
         $user->setUsername('username');
         $this->entityManager->persist($user);
@@ -157,7 +156,7 @@ class PostRepositoryTest extends KernelTestCase
         $post = new Post();
         $post->setTitle('Tech Post');
         $post->setContent('This is a post about technology.');
-        $post->setSlug('tech-post');
+        $post->setSlug(uniqid('tech-post_', true));
         $post->setCategory($category);
         $post->setAuthor($user);
         $this->entityManager->persist($post);
