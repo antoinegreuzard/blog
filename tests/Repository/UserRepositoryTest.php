@@ -9,13 +9,14 @@
  * with this source code in the file LICENSE.
  */
 
-namespace App\Tests\Repository;
+namespace Repository;
 
 use App\Entity\User;
 use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 /**
  * Class UserRepositoryTest
@@ -26,7 +27,7 @@ use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 class UserRepositoryTest extends KernelTestCase
 {
     /**
-     * @var \Doctrine\ORM\EntityManagerInterface $entityManager
+     * @var EntityManagerInterface $entityManager
      * Le gestionnaire d'entité utilisé pour interagir avec la base de données de test.
      */
     private $entityManager;
@@ -37,21 +38,6 @@ class UserRepositoryTest extends KernelTestCase
      */
     private UserRepository $userRepository;
 
-
-    /**
-     * setUp
-     *
-     * Méthode exécutée avant chaque test. Elle initialise le gestionnaire d'entité et le repository.
-     */
-    protected function setUp(): void
-    {
-        $kernel = self::bootKernel();
-        $this->entityManager = $kernel->getContainer()
-            ->get('doctrine')
-            ->getManager();
-        $this->userRepository = $this->entityManager->getRepository(User::class);
-    }
-
     /**
      * testFind
      *
@@ -61,7 +47,7 @@ class UserRepositoryTest extends KernelTestCase
     public function testFind(): void
     {
         $user = new User();
-        $user->setEmail('user@example.com');
+        $user->setEmail(uniqid('user_', true).'@example.com');
         $user->setPassword('SecurePass123!');
         $user->setUsername('username1');
         $this->entityManager->persist($user);
@@ -80,13 +66,15 @@ class UserRepositoryTest extends KernelTestCase
     public function testFindOneBy(): void
     {
         $user = new User();
-        $user->setEmail('user@example.com');
+        $user->setEmail(uniqid('user_', true).'@example.com');
         $user->setPassword('SecurePass123!');
         $user->setUsername('username2');
         $this->entityManager->persist($user);
         $this->entityManager->flush();
 
-        $foundUser = $this->userRepository->findOneBy(['email' => 'user@example.com']);
+        $foundUser = $this->userRepository->findOneBy(
+            ['email' => 'user@example.com']
+        );
         $this->assertInstanceOf(User::class, $foundUser);
     }
 
@@ -100,7 +88,7 @@ class UserRepositoryTest extends KernelTestCase
     public function testFindAll(): void
     {
         $user = new User();
-        $user->setEmail('user@example.com');
+        $user->setEmail(uniqid('user_', true).'@example.com');
         $user->setPassword('SecurePass123!');
         $user->setUsername('username3');
         $this->entityManager->persist($user);
@@ -121,7 +109,7 @@ class UserRepositoryTest extends KernelTestCase
     public function testFindBy(): void
     {
         $user = new User();
-        $user->setEmail('user@example.com');
+        $user->setEmail(uniqid('user_', true).'@example.com');
         $user->setPassword('SecurePass123!');
         $user->setUsername('username4');
         $this->entityManager->persist($user);
@@ -142,7 +130,7 @@ class UserRepositoryTest extends KernelTestCase
     public function testUpgradePassword(): void
     {
         $user = new User();
-        $user->setEmail('test@example.com');
+        $user->setEmail(uniqid('user_', true).'@example.com');
         $user->setPassword('OldSecurePass456!');
         $user->setUsername('testuser');
 
@@ -165,8 +153,29 @@ class UserRepositoryTest extends KernelTestCase
     {
         $this->expectException(UnsupportedUserException::class);
 
-        $unsupportedUser = $this->createMock(PasswordAuthenticatedUserInterface::class);
-        $this->userRepository->upgradePassword($unsupportedUser, 'NewSecurePass789!');
+        $unsupportedUser = $this->createMock(
+            PasswordAuthenticatedUserInterface::class
+        );
+        $this->userRepository->upgradePassword(
+            $unsupportedUser,
+            'NewSecurePass789!'
+        );
+    }
+
+    /**
+     * setUp
+     *
+     * Méthode exécutée avant chaque test. Elle initialise le gestionnaire d'entité et le repository.
+     */
+    protected function setUp(): void
+    {
+        $kernel = self::bootKernel();
+        $this->entityManager = $kernel->getContainer()
+            ->get('doctrine')
+            ->getManager();
+        $this->userRepository = $this->entityManager->getRepository(
+            User::class
+        );
     }
 
     /**

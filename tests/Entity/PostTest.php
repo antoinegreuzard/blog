@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace App\Tests\Entity;
+namespace Entity;
 
 use App\Entity\Category;
 use App\Entity\Post;

@@ -9,11 +9,11 @@
  * with this source code in the file LICENSE.
  */
 
-namespace App\Tests\Entity;
+namespace Entity;
 
+use App\Entity\Post;
 use App\Entity\User;
 use PHPUnit\Framework\TestCase;
-use App\Entity\Post;
 
 /**
  * Class UserTest

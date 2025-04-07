@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace App\Tests\Controller;
+namespace Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 

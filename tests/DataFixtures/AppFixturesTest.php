@@ -9,11 +9,12 @@
  * with this source code in the file LICENSE.
  */
 
-namespace App\Tests\DataFixtures;
+namespace DataFixtures;
 
-use PHPUnit\Framework\TestCase;
-use Doctrine\Persistence\ObjectManager;
 use App\DataFixtures\AppFixtures;
+use Doctrine\Persistence\ObjectManager;
+use PHPUnit\Framework\MockObject\Stub;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class AppFixturesTest
@@ -37,7 +38,7 @@ class AppFixturesTest extends TestCase
         // Configure le mock pour attendre la méthode persist.
         $objectManager->expects($this->any())
             ->method('persist')
-            ->will($this->returnValue(null));
+            ->will(Stub::returnValue(null));
 
         // Configure le mock pour attendre la méthode flush.
         $objectManager->expects($this->once())

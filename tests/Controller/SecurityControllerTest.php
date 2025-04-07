@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace App\Tests\Controller;
+namespace Controller;
 
 use App\Entity\User;
 use App\Repository\UserRepository;
