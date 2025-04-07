@@ -9,11 +9,11 @@
  * with this source code in the file LICENSE.
  */
 
-namespace App\Tests\Entity;
+namespace Entity;
 
+use App\Entity\Post;
 use App\Entity\User;
 use PHPUnit\Framework\TestCase;
-use App\Entity\Post;
 
 /**
  * Class UserTest
@@ -29,7 +29,7 @@ class UserTest extends TestCase
      * Teste les propriétés initiales d'un nouvel utilisateur.
      * Vérifie que les propriétés par défaut sont définies correctement.
      */
-    public function testInitialProperties()
+    public function testInitialProperties(): void
     {
         $user = new User();
         $this->assertNull($user->getId());
@@ -46,13 +46,13 @@ class UserTest extends TestCase
      * Teste la gestion de l'email de l'utilisateur.
      * Vérifie que l'email peut être défini et récupéré correctement.
      */
-    public function testEmail()
+    public function testEmail(): void
     {
         $user = new User();
         $email = 'test@example.com';
         $user->setEmail($email);
-        $this->assertEquals($email, $user->getEmail());
-        $this->assertEquals($email, $user->getUserIdentifier());
+        $this->assertSame($email, $user->getEmail());
+        $this->assertSame($email, $user->getUserIdentifier());
     }
 
     /**
@@ -62,13 +62,18 @@ class UserTest extends TestCase
      * Vérifie que les rôles peuvent être définis et récupérés correctement,
      * et que le rôle `ROLE_USER` est toujours présent.
      */
-    public function testRoles()
+    public function testRoles(): void
     {
         $user = new User();
         $roles = ['ROLE_ADMIN'];
         $user->setRoles($roles);
-        $this->assertContains('ROLE_ADMIN', $user->getRoles());
-        $this->assertContains('ROLE_USER', $user->getRoles());
+
+        $result = $user->getRoles();
+        $this->assertContains('ROLE_ADMIN', $result);
+        $this->assertContains(
+            'ROLE_USER',
+            $result
+        ); // ROLE_USER doit toujours être présent
     }
 
     /**
@@ -77,12 +82,12 @@ class UserTest extends TestCase
      * Teste la gestion du mot de passe de l'utilisateur.
      * Vérifie que le mot de passe peut être défini et récupéré correctement.
      */
-    public function testPassword()
+    public function testPassword(): void
     {
         $user = new User();
         $password = 'hashed_password';
         $user->setPassword($password);
-        $this->assertEquals($password, $user->getPassword());
+        $this->assertSame($password, $user->getPassword());
     }
 
     /**
@@ -91,12 +96,12 @@ class UserTest extends TestCase
      * Teste la gestion du nom d'utilisateur.
      * Vérifie que le nom d'utilisateur peut être défini et récupéré correctement.
      */
-    public function testUsername()
+    public function testUsername(): void
     {
         $user = new User();
         $username = 'username_test';
         $user->setUsername($username);
-        $this->assertEquals($username, $user->getUsername());
+        $this->assertSame($username, $user->getUsername());
     }
 
     /**
@@ -105,10 +110,11 @@ class UserTest extends TestCase
      * Teste la gestion des posts associés à l'utilisateur.
      * Vérifie que les posts peuvent être ajoutés, récupérés et supprimés correctement.
      */
-    public function testPosts()
+    public function testPosts(): void
     {
         $user = new User();
         $post = $this->createMock(Post::class);
+
         $post->method('getAuthor')->willReturn($user);
 
         $user->addPost($post);

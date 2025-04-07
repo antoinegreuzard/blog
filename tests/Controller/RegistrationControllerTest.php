@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace App\Tests\Controller;
+namespace Controller;
 
 use App\Entity\User;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -47,30 +47,6 @@ class RegistrationControllerTest extends WebTestCase
 {
     private KernelBrowser $client;
     private ?object $entityManager;
-
-    /**
-     * @return void
-     */
-    protected function setUp(): void
-    {
-        $this->client = static::createClient();
-        $this->entityManager = $this->client->getContainer()->get(
-            'doctrine.orm.entity_manager'
-        );
-    }
-
-    /**
-     * @return void
-     */
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-
-        if ($this->entityManager) {
-            $this->entityManager->close();
-            $this->entityManager = null;
-        }
-    }
 
     /**
      * @return void
@@ -131,5 +107,29 @@ class RegistrationControllerTest extends WebTestCase
             '.alert-danger',
             'This email is already registered.'
         );
+    }
+
+    /**
+     * @return void
+     */
+    protected function setUp(): void
+    {
+        $this->client = static::createClient();
+        $this->entityManager = $this->client->getContainer()->get(
+            'doctrine.orm.entity_manager'
+        );
+    }
+
+    /**
+     * @return void
+     */
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+
+        if ($this->entityManager) {
+            $this->entityManager->close();
+            $this->entityManager = null;
+        }
     }
 }

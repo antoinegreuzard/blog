@@ -9,10 +9,11 @@
  * with this source code in the file LICENSE.
  */
 
-namespace App\Tests\Repository;
+namespace Repository;
 
 use App\Entity\Category;
 use App\Repository\CategoryRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 /**
@@ -24,7 +25,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 class CategoryRepositoryTest extends KernelTestCase
 {
     /**
-     * @var \Doctrine\ORM\EntityManagerInterface $entityManager
+     * @var EntityManagerInterface $entityManager
      * Le gestionnaire d'entité utilisé pour interagir avec la base de données de test.
      */
     private $entityManager;
@@ -34,23 +35,6 @@ class CategoryRepositoryTest extends KernelTestCase
      * Le repository pour l'entité Category utilisé pour tester les opérations de récupération de données.
      */
     private CategoryRepository $categoryRepository;
-
-    /**
-     * setUp
-     *
-     * Méthode exécutée avant chaque test. Elle initialise le gestionnaire d'entité et le repository.
-     */
-    protected function setUp(): void
-    {
-        $kernel = self::bootKernel();
-        $this->entityManager = $kernel->getContainer()
-            ->get('doctrine')
-            ->getManager();
-        $this->categoryRepository = $this->entityManager->getRepository(Category::class);
-
-        // Préparer les données de test
-        $this->loadTestData();
-    }
 
     /**
      * testFind
@@ -105,15 +89,22 @@ class CategoryRepositoryTest extends KernelTestCase
     }
 
     /**
-     * tearDown
+     * setUp
      *
-     * Méthode exécutée après chaque test. Elle ferme le gestionnaire d'entité pour éviter les fuites de mémoire.
+     * Méthode exécutée avant chaque test. Elle initialise le gestionnaire d'entité et le repository.
      */
-    protected function tearDown(): void
+    protected function setUp(): void
     {
-        parent::tearDown();
-        $this->entityManager->close();
-        $this->entityManager = null; // éviter les fuites de mémoire
+        $kernel = self::bootKernel();
+        $this->entityManager = $kernel->getContainer()
+            ->get('doctrine')
+            ->getManager();
+        $this->categoryRepository = $this->entityManager->getRepository(
+            Category::class
+        );
+
+        // Préparer les données de test
+        $this->loadTestData();
     }
 
     /**
@@ -128,5 +119,17 @@ class CategoryRepositoryTest extends KernelTestCase
         $category->setName('Tech');
         $this->entityManager->persist($category);
         $this->entityManager->flush();
+    }
+
+    /**
+     * tearDown
+     *
+     * Méthode exécutée après chaque test. Elle ferme le gestionnaire d'entité pour éviter les fuites de mémoire.
+     */
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+        $this->entityManager->close();
+        $this->entityManager = null; // éviter les fuites de mémoire
     }
 }
