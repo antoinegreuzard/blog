@@ -61,24 +61,24 @@ use Symfony\Component\Validator\Constraints as Assert;
     operations: [
         new Get(
             uriTemplate: '/categories/{id}',
-            openapiContext: [
+            openapi: new Operation(
                 'summary' => 'Get a category',
                 'description' => 'Retrieve a category by its ID.',
                 'responses' => [
-                    '200' => [
-                        'description' => 'Category resource',
-                        'content' => [
-                            'application/json' => [
-                                'example' => [
-                                    'id' => 1,
-                                    'name' => 'Technology',
-                                    'posts' => [],
-                                ],
-                            ],
-                        ],
-                    ],
+                '200' => [
+                'description' => 'Category resource',
+                'content' => [
+                'application/json' => [
+                'example' => [
+                'id' => 1,
+                'name' => 'Technology',
+                'posts' => [],
                 ],
-            ],
+                ],
+                ],
+                ],
+                ],
+            ),
         ),
         new GetCollection(
             uriTemplate: '/categories',
