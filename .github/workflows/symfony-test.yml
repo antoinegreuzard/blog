@@ -1,53 +1,53 @@
 name: CI
 
-on: [ push, pull_request ]
+on: [push, pull_request]
 
 jobs:
     tests:
         runs-on: ubuntu-latest
 
         steps:
-            -   name: Checkout code
-                uses: actions/checkout@v4
+            - name: Checkout code
+              uses: actions/checkout@v4
 
-            -   name: Set up PHP
-                uses: shivammathur/setup-php@v2
-                with:
-                    extensions: mbstring, intl, pdo_sqlite
+            - name: Set up PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  extensions: mbstring, intl, pdo_sqlite
 
-            -   name: Generate APP_SECRET
-                id: generate_app_secret
-                run: echo "APP_SECRET=$(openssl rand -hex 16)" >> $GITHUB_ENV
+            - name: Generate APP_SECRET
+              id: generate_app_secret
+              run: echo "APP_SECRET=$(openssl rand -hex 16)" >> $GITHUB_ENV
 
-            -   name: Create .env.local file
-                run: |
-                    echo 'APP_ENV=prod' >> .env.local
-                    echo "APP_SECRET=${{ env.APP_SECRET }}" >> .env.local
-                    echo 'DATABASE_URL="sqlite:///%kernel.project_dir%/var/data_prod.db"' >> .env.local
+            - name: Create .env.local file
+              run: |
+                  echo 'APP_ENV=prod' >> .env.local
+                  echo "APP_SECRET=${{ env.APP_SECRET }}" >> .env.local
+                  echo 'DATABASE_URL="sqlite:///%kernel.project_dir%/var/data_prod.db"' >> .env.local
 
-            -   name: Create .env.test.local file
-                run: |
-                    echo 'APP_ENV=test' >> .env.test.local
-                    echo "APP_SECRET=${{ env.APP_SECRET }}" >> .env.test.local
-                    echo 'DATABASE_URL="sqlite:///%kernel.project_dir%/var/data_test.db"' >> .env.test.local
+            - name: Create .env.test.local file
+              run: |
+                  echo 'APP_ENV=test' >> .env.test.local
+                  echo "APP_SECRET=${{ env.APP_SECRET }}" >> .env.test.local
+                  echo 'DATABASE_URL="sqlite:///%kernel.project_dir%/var/data_test.db"' >> .env.test.local
 
-            -   name: Create SQLite databases
-                run: |
-                    mkdir -p var
-                    touch var/data_prod.db
-                    touch var/data_test.db
+            - name: Create SQLite databases
+              run: |
+                  mkdir -p var
+                  touch var/data_prod.db
+                  touch var/data_test.db
 
-            -   name: Install dependencies
-                run: composer install --prefer-dist --no-progress --no-suggest
+            - name: Install dependencies
+              run: composer install --prefer-dist --no-progress --no-suggest
 
-            -   name: Run database migrations for production
-                run: php bin/console doctrine:migrations:migrate --env=prod --no-interaction
+            - name: Run database migrations for production
+              run: php bin/console doctrine:migrations:migrate --env=prod --no-interaction
 
-            -   name: Run database migrations for test
-                run: php bin/console doctrine:migrations:migrate --env=test --no-interaction
+            - name: Run database migrations for test
+              run: php bin/console doctrine:migrations:migrate --env=test --no-interaction
 
-            -   name: Clear cache for test
-                run: php bin/console cache:clear --env=test
+            - name: Clear cache for test
+              run: php bin/console cache:clear --env=test
 
-            -   name: Run tests
-                run: ./vendor/bin/simple-phpunit
+            - name: Run tests
+              run: ./bin/phpunit
