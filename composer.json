@@ -43,7 +43,7 @@
         "symfony/notifier": "7.2.6",
         "symfony/phpunit-bridge": "^7.2",
         "symfony/process": "7.2.5",
-        "symfony/property-access": "7.2.3",
+        "symfony/property-access": "7.3.0",
         "symfony/property-info": "7.2.5",
         "symfony/runtime": "7.2.3",
         "symfony/security-bundle": "7.2.3",
