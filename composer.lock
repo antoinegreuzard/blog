@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "48c2c7a38dca5839293287e54ddf80e6",
+    "content-hash": "668bcee5f1038e78d659b3d336354af7",
     "packages": [
         {
             "name": "api-platform/core",
@@ -4020,22 +4020,22 @@
         },
         {
             "name": "symfony/doctrine-messenger",
-            "version": "v7.2.5",
+            "version": "v7.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/doctrine-messenger.git",
-                "reference": "c353e6ee6b41748d8ea6faa2d0b84ac501e3ec0c"
+                "reference": "099d9cd03f889c31c90d406fed07f25dc3732487"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/doctrine-messenger/zipball/c353e6ee6b41748d8ea6faa2d0b84ac501e3ec0c",
-                "reference": "c353e6ee6b41748d8ea6faa2d0b84ac501e3ec0c",
+                "url": "https://api.github.com/repos/symfony/doctrine-messenger/zipball/099d9cd03f889c31c90d406fed07f25dc3732487",
+                "reference": "099d9cd03f889c31c90d406fed07f25dc3732487",
                 "shasum": ""
             },
             "require": {
                 "doctrine/dbal": "^3.6|^4",
                 "php": ">=8.2",
-                "symfony/messenger": "^6.4|^7.0",
+                "symfony/messenger": "^7.2",
                 "symfony/service-contracts": "^2.5|^3"
             },
             "conflict": {
@@ -4072,7 +4072,7 @@
             "description": "Symfony Doctrine Messenger Bridge",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/doctrine-messenger/tree/v7.2.5"
+                "source": "https://github.com/symfony/doctrine-messenger/tree/v7.3.0"
             },
             "funding": [
                 {
@@ -4088,7 +4088,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-03-25T15:54:33+00:00"
+            "time": "2025-03-26T11:30:13+00:00"
         },
         {
             "name": "symfony/dom-crawler",
