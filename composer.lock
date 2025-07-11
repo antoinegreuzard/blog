@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6adae8f58838bb0c0bade987049b8ba0",
+    "content-hash": "7eefca74a0226fac9fa158b149fe0e30",
     "packages": [
         {
             "name": "api-platform/core",
@@ -6752,16 +6752,16 @@
         },
         {
             "name": "symfony/property-access",
-            "version": "v7.3.0",
+            "version": "v7.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/property-access.git",
-                "reference": "3bcf43665d6aff90547b005348e1e351f4e2174b"
+                "reference": "518d15c8cca726ebe665dcd7154074584cf862e8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/property-access/zipball/3bcf43665d6aff90547b005348e1e351f4e2174b",
-                "reference": "3bcf43665d6aff90547b005348e1e351f4e2174b",
+                "url": "https://api.github.com/repos/symfony/property-access/zipball/518d15c8cca726ebe665dcd7154074584cf862e8",
+                "reference": "518d15c8cca726ebe665dcd7154074584cf862e8",
                 "shasum": ""
             },
             "require": {
@@ -6808,7 +6808,7 @@
                 "reflection"
             ],
             "support": {
-                "source": "https://github.com/symfony/property-access/tree/v7.3.0"
+                "source": "https://github.com/symfony/property-access/tree/v7.3.1"
             },
             "funding": [
                 {
@@ -6824,7 +6824,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-05-10T11:59:09+00:00"
+            "time": "2025-06-24T04:04:43+00:00"
         },
         {
             "name": "symfony/property-info",
