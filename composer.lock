@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bc067c0eabf3126a9f72ac29d403c4dd",
+    "content-hash": "7cfe84cb4ab483773cc83eb266afd8a8",
     "packages": [
         {
             "name": "api-platform/core",
@@ -4035,16 +4035,16 @@
         },
         {
             "name": "symfony/doctrine-messenger",
-            "version": "v7.3.0",
+            "version": "v7.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/doctrine-messenger.git",
-                "reference": "099d9cd03f889c31c90d406fed07f25dc3732487"
+                "reference": "31ef09fa3185c8ef9a331170b7a9dd891047f5cb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/doctrine-messenger/zipball/099d9cd03f889c31c90d406fed07f25dc3732487",
-                "reference": "099d9cd03f889c31c90d406fed07f25dc3732487",
+                "url": "https://api.github.com/repos/symfony/doctrine-messenger/zipball/31ef09fa3185c8ef9a331170b7a9dd891047f5cb",
+                "reference": "31ef09fa3185c8ef9a331170b7a9dd891047f5cb",
                 "shasum": ""
             },
             "require": {
@@ -4087,7 +4087,7 @@
             "description": "Symfony Doctrine Messenger Bridge",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/doctrine-messenger/tree/v7.3.0"
+                "source": "https://github.com/symfony/doctrine-messenger/tree/v7.3.2"
             },
             "funding": [
                 {
@@ -4099,11 +4099,15 @@
                     "type": "github"
                 },
                 {
+                    "url": "https://github.com/nicolas-grekas",
+                    "type": "github"
+                },
+                {
                     "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-03-26T11:30:13+00:00"
+            "time": "2025-07-30T17:13:41+00:00"
         },
         {
             "name": "symfony/dom-crawler",
