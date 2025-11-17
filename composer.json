@@ -29,7 +29,7 @@
         "symfony/css-selector": "7.3.6",
         "symfony/debug-bundle": "7.3.5",
         "symfony/doctrine-bridge": "7.3.5",
-        "symfony/doctrine-messenger": "7.3.4",
+        "symfony/doctrine-messenger": "7.3.6",
         "symfony/dotenv": "7.3.2",
         "symfony/expression-language": "7.3.2",
         "symfony/flex": "^2",
